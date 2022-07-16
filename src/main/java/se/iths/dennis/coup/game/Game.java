@@ -460,4 +460,29 @@ public class Game {
         System.out.println();
         System.out.println();
     }
+
+    public void rearrangePlayers() {
+        List<Player> newPlayerOrder = new ArrayList<>();
+        List<Player> playersBeforeWinner = new ArrayList<>();
+
+        for (int i = 0; i < allPlayers.size(); i++) {
+
+            do {
+                playersBeforeWinner.add(allPlayers.get(i));
+                i++;
+
+            } while (!allPlayers.get(i).isLatestWinner());
+
+            while (i < allPlayers.size()){
+                newPlayerOrder.add(allPlayers.get(i));
+                i++;
+            }
+
+            for (Player p:playersBeforeWinner) {
+                newPlayerOrder.add(p);
+            }
+        }
+
+        allPlayers = newPlayerOrder;
+    }
 }

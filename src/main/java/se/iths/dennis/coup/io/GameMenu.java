@@ -17,7 +17,7 @@ public class GameMenu {
     }
 
     public void setUpThePlayers() {
-        System.out.println("Welcome to a new round of Coup! How many will play? You can be between 2-6 players");
+
         while (true) {
             System.out.print("number of players:");
             int numberOfPlayers = sc.nextInt();
@@ -42,9 +42,12 @@ public class GameMenu {
                 System.out.println("Wrong, you must be 2-6 players! Type again!");
             }
         }
+
         if (game.getAllPlayers().size() == 2) {
             prepare2PlayersGame();
-        } else {
+        }
+
+        else {
             prepareNormalGame();
         }
 
@@ -195,7 +198,10 @@ public class GameMenu {
                 List<Player> remainingPlayers = game.getRemainingPlayers();
 
                 if (remainingPlayers.size() == 1) {
+                    remainingPlayers.get(0).setLatestWinner(true);
                     System.out.println("The game is over and the winner is " + remainingPlayers.get(0).getName());
+                    System.out.println("Press Enter!");
+                    sc.nextLine();
                     loop = false;
                     break;
                 }
@@ -215,6 +221,35 @@ public class GameMenu {
 
                 game.makeSpace();
             }
+        }
+
+        continueOrQuitMenu();
+    }
+
+    private void continueOrQuitMenu() {
+        System.out.println("Do you want to start a new game?");
+        String answer = yesOrNoMenu();
+
+        if(answer.equals("Yes")){
+            System.out.println("Do you want to play with the same players again? If not you will register number of" +
+                    " players and their names once again.");
+
+            answer = yesOrNoMenu();
+
+            if(answer.equals("Yes")){
+
+                if(!game.getAllPlayers().get(0).isLatestWinner()){
+                    game.rearrangePlayers();
+                }
+            }
+
+            else if(answer.equals("No")){
+
+            }
+        }
+
+        else if(answer.equals("No")){
+            System.out.println("Alright see you next time!");
         }
     }
 
@@ -400,7 +435,7 @@ public class GameMenu {
 
                 else if (c.getName().equals("Captain") &&
                         game.getOpponentsToStealFrom(p).isEmpty()) {
-                    System.out.println("Since your opponents is out of coins you can't use Captain!");
+                    System.out.println("Since your opponent/opponents are out of coins you can't use Captain!");
                 }
 
                 else if (c.getName().equals("Duke") && game.getGameBoard().getTreasury() < 3) {
@@ -415,6 +450,7 @@ public class GameMenu {
             if (availableCharacters.size() == 1) {
                 System.out.println("You will use " + availableCharacters.get(0).getName() + " instead!");
                 System.out.println("Press Enter!");
+                sc.nextLine();
                 game.makeSpace();
                 characterActionMenu(p, availableCharacters.get(0).getName());
             }
@@ -662,7 +698,6 @@ public class GameMenu {
 
             if(answer.equals("Challenge")){
                 System.out.println("Alright, let's verify your statement " + p.getName() + ":");
-                game.makeSpace();
 
                 if (game.verifyStatement(p, "Captain").equals("truth")) {
                     System.out.println("Well, since you actually had Captain " + p.getName() + ", " +
@@ -987,6 +1022,8 @@ public class GameMenu {
 
                 if(game.getRemainingPlayers().size() > 1) {
 
+                    game.makeSpace();
+
                     System.out.println("Now hand over the computer to "
                             + p.getName());
 
@@ -1180,6 +1217,11 @@ public class GameMenu {
                 livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
 
             game.executeCharacter(p, livingCharacters.get(0));
+
+            if(p.isOut()){
+                System.out.println("Press Enter!");
+                sc.nextLine();
+            }
 
         } else {
             selectCharacterToLoseInfluence(p);

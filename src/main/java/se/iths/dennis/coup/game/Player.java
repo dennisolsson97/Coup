@@ -16,6 +16,7 @@ public class Player {
     private Integer coins = 0;
     private List<CoupCharacter> characters = new ArrayList<>();
     private boolean isOut;
+    private boolean isLatestWinner;
 
     public Player() {
     }
@@ -63,6 +64,14 @@ public class Player {
 
     public void setOut(boolean out) {
         isOut = out;
+    }
+
+    public boolean isLatestWinner() {
+        return isLatestWinner;
+    }
+
+    public void setLatestWinner(boolean latestWinner) {
+        isLatestWinner = latestWinner;
     }
 
     @Override
