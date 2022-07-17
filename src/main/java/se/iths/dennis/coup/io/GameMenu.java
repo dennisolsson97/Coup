@@ -79,7 +79,9 @@ public class GameMenu {
             if (p.getPlayerNumber() == game.getAllPlayers().get(0).getPlayerNumber()) {
                 p.setCoins(1);
                 game.getGameBoard().setTreasury(-1);
-            } else {
+            }
+
+            else {
                 p.setCoins(2);
                 game.getGameBoard().setTreasury(-2);
             }
@@ -141,6 +143,10 @@ public class GameMenu {
                         System.out.println("Wrong, type again!");
                 }
             }
+
+            fiveRandomCharacters.stream().
+                    filter(c -> c.getCharacterNumber() != p.getCharacters().get(0).getCharacterNumber()).
+                    forEach(c -> game.getDiscardPile().add(c));
 
         }
 
@@ -231,6 +237,8 @@ public class GameMenu {
         String answer = yesOrNoMenu();
 
         if(answer.equals("Yes")){
+            game.resetGameBoard();
+
             System.out.println("Do you want to play with the same players again? If not you will register number of" +
                     " players and their names once again.");
 
@@ -244,7 +252,6 @@ public class GameMenu {
             }
 
             else if(answer.equals("No")){
-
             }
         }
 

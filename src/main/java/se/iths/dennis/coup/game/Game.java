@@ -15,6 +15,7 @@ public class Game {
     private List<String> characterNames = new ArrayList<>();
     private String errorMessage;
     private List<String> reasons = new ArrayList<>();
+    private List<CoupCharacter> discardPile = new ArrayList<>();
 
     public List<Player> getAllPlayers() {
         return allPlayers;
@@ -36,7 +37,15 @@ public class Game {
         return reasons;
     }
 
-    public void prepareNewGame() {
+    public List<CoupCharacter> getDiscardPile() {
+        return discardPile;
+    }
+
+    public void setDiscardPile(List<CoupCharacter> discardPile) {
+        this.discardPile = discardPile;
+    }
+
+    public void createGameBoard() {
         gameBoard = new GameBoard();
         gameBoard.setTreasury(50);
 
@@ -484,5 +493,11 @@ public class Game {
         }
 
         allPlayers = newPlayerOrder;
+    }
+
+    public void resetGameBoard() {
+        if(allPlayers.size() == 2){
+
+        }
     }
 }
