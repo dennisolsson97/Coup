@@ -16,7 +16,7 @@ public class GameMenu {
         this.game = game;
     }
 
-    public void setUpThePlayers() {
+    public void createNewPlayers() {
 
         while (true) {
             System.out.print("number of players:");
@@ -251,9 +251,19 @@ public class GameMenu {
                 }
 
                 game.resetPlayers();
+
+                if(game.getAllPlayers().size() == 2){
+                    prepare2PlayersGame();
+                }
+
+                else {
+                    prepareNormalGame();
+                }
             }
 
             else if(answer.equals("No")){
+                game.setAllPlayers(new ArrayList<>());
+                createNewPlayers();
             }
         }
 

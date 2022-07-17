@@ -504,7 +504,7 @@ public class Game {
 
         for (Player p:allPlayers) {
 
-            if(p.isLatestWinner() && p.getCoins() > 0){
+            if(p.getCoins() > 0){
                 gameBoard.setTreasury(p.getCoins());
                 p.setCoins(-p.getCoins());
             }
@@ -516,6 +516,11 @@ public class Game {
     }
 
     public void resetPlayers() {
+
+        for (Player p:allPlayers) {
+            p.setLatestWinner(false);
+            p.setOut(false);
+        }
 
     }
 }
