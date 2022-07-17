@@ -249,6 +249,8 @@ public class GameMenu {
                 if(!game.getAllPlayers().get(0).isLatestWinner()){
                     game.rearrangePlayers();
                 }
+
+                game.resetPlayers();
             }
 
             else if(answer.equals("No")){
@@ -818,6 +820,9 @@ public class GameMenu {
 
         else if(answer.equals("No")){
             game.steal(p, opponent);
+            System.out.println("Your steal went through " + p.getName());
+            System.out.println("Press Enter!");
+            sc.nextLine();
         }
     }
 

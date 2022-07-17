@@ -496,8 +496,26 @@ public class Game {
     }
 
     public void resetGameBoard() {
-        if(allPlayers.size() == 2){
 
+        if(allPlayers.size() == 2){
+            discardPile.forEach(c -> gameBoard.getCourtDeck().add(c));
+            discardPile = new ArrayList<>();
         }
+
+        for (Player p:allPlayers) {
+
+            if(p.isLatestWinner() && p.getCoins() > 0){
+                gameBoard.setTreasury(p.getCoins());
+                p.setCoins(-p.getCoins());
+            }
+
+            p.getCharacters().stream().filter(c -> c.isDead()).forEach(c -> c.setDead(false));
+            p.getCharacters().stream().forEach(c -> gameBoard.getCourtDeck().add(c));
+            p.setCharacters(new ArrayList<>());
+        }
+    }
+
+    public void resetPlayers() {
+
     }
 }
