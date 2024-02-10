@@ -47,7 +47,6 @@ public class Game {
 
     public void createGameBoard() {
         gameBoard = new GameBoard();
-        gameBoard.setTreasury(50);
 
         characterNames.add("Duke");
         characterNames.add("Assassin");

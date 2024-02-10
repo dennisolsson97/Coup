@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
-    private Integer treasury = 0;
+    private Integer treasury = 50;
     private List<CoupCharacter> courtDeck = new ArrayList<>();
 
     public Integer getTreasury() {
         return treasury;
     }
 
-    public void setTreasury(Integer treasury) {
-        this.treasury = this.treasury + treasury;
+    public void setTreasury(Integer regulation) {
+        this.treasury += regulation;
     }
 
     public List<CoupCharacter> getCourtDeck() {
