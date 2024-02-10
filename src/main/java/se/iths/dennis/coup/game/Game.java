@@ -145,7 +145,7 @@ public class Game {
                             selectedOpponent.setOut(true);
 
                             System.out.println("You have lost both your characters " + selectedOpponent.getName()
-                                    + " and you are now out of the game!");
+                                    + " and are now out of the game!");
 
                             if(selectedOpponent.getCoins()>0){
                                 gameBoard.setTreasury(selectedOpponent.getCoins());
@@ -192,7 +192,7 @@ public class Game {
                 return "unable";
             }
             else if (livingCharacters.get(0).getName().equals("Captain") && getOpponentsToStealFrom(p).isEmpty()) {
-                errorMessage = "Since none opponent has coins you can't steal!";
+                errorMessage = "Since none of your opponents have coins you can't steal!";
                 return "unable";
             }
             else if (livingCharacters.get(0).getName().equals("Duke") && gameBoard.getTreasury() < 3) {
@@ -238,7 +238,7 @@ public class Game {
                     count() == 2){
 
                 if(gameBoard.getTreasury() < 3 && p.getCoins() < 3){
-                    errorMessage = "Since both you and the treasury has less than 3 coins " +
+                    errorMessage = "Since both you and the treasury have less than 3 coins " +
                             "you can't use any of your characters!";
 
                     return "unable";

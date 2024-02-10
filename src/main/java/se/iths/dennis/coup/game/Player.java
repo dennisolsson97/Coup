@@ -1,10 +1,6 @@
 package se.iths.dennis.coup.game;
 
 import org.springframework.web.context.annotation.SessionScope;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 

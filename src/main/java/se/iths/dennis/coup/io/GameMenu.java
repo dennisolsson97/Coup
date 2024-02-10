@@ -27,7 +27,7 @@ public class GameMenu {
 
                 List<Player> allPlayers = new ArrayList<>();
 
-                System.out.println("Now let all the players type in their name!");
+                System.out.println("Now let all the players type their name!");
 
                 for (int i = 0; i < numberOfPlayers; i++) {
                     System.out.println("name of player number " + (i + 1) + ":");
