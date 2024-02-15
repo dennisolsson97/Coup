@@ -11,8 +11,8 @@ public class GameBoard {
         return treasury;
     }
 
-    public void setTreasury(Integer regulation) {
-        this.treasury += regulation;
+    public void setTreasury(Integer transaction) {
+        this.treasury += transaction;
     }
 
     public List<CoupCharacter> getCourtDeck() {
