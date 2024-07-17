@@ -32,9 +32,9 @@ public class CoupCharacter {
     public String getStatus() {
         if (isDead) {
             return name;
-        } else {
-            return "unknown";
         }
+            return "unknown";
+        
     }
 
     public boolean isDead() {
