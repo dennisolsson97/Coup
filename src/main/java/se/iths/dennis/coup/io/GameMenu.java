@@ -187,9 +187,10 @@ public class GameMenu {
     private void playGame() {
 
         boolean loop = true;
+        List<Player> allPlayers = game.getAllPlayers();
 
         while (loop) {
-            List<Player> allPlayers = game.getAllPlayers();
+            
 
             for (int i = 0; i < allPlayers.size(); i++) {
 
