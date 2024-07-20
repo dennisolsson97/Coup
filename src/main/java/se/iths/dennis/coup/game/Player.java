@@ -34,8 +34,8 @@ public class Player {
         return coins;
     }
 
-    public void setCoins(Integer coins) {
-        this.coins = this.coins + coins;
+    public void setCoins(Integer transaction) {
+        this.coins += transaction;
     }
 
     public List<CoupCharacter> getCharacters() {

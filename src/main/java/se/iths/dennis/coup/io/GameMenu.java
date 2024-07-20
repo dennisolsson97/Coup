@@ -23,7 +23,7 @@ public class GameMenu {
             int numberOfPlayers = sc.nextInt();
             sc.nextLine();
 
-            if (numberOfPlayers > 1 && numberOfPlayers < 7) {
+            if (1 < numberOfPlayers && numberOfPlayers < 7) {
 
                 List<Player> allPlayers = new ArrayList<>();
 
