@@ -169,10 +169,8 @@ public class Game {
     }
 
     public List<CoupCharacter> getLivingCharacters(Player p) {
-        return p.getCharacters().
-                stream().
-                filter(c -> !c.isDead()).
-                collect(Collectors.toList());
+        
+        return p.getCharacters().stream().filter(c -> !c.isDead()).collect(Collectors.toList());
     }
 
     public String checkOwnCharacterAble(Player p) {
@@ -418,9 +416,8 @@ public class Game {
     }
 
     public List<Player> getRemainingPlayers() {
-        return allPlayers.stream().
-                filter(p -> !p.isOut()).
-                collect(Collectors.toList());
+        
+        return allPlayers.stream().filter(p -> !p.isOut()).collect(Collectors.toList());
     }
 
     public void steal(Player p, Player opponent) {

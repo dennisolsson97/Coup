@@ -172,7 +172,8 @@ public class GameMenu {
 
             sc.nextLine();
 
-            System.out.println("Your characters are: " + game.getAllPlayers().get(i).getCharacters().get(0).getName()
+            System.out.println("Your characters are: " + 
+            game.getAllPlayers().get(i).getCharacters().get(0).getName()
                     + ", "
                     + game.getAllPlayers().get(i).getCharacters().get(1).getName());
 
@@ -191,8 +192,7 @@ public class GameMenu {
 
         while (loop) {
             
-
-            for (int i = 0; i < allPlayers.size(); i++) {
+         for (int i = 0; i < allPlayers.size(); i++) {
 
                 while (allPlayers.get(i).isOut()) {
                     i++;
@@ -482,7 +482,7 @@ public class GameMenu {
     }
 
     private void selectCharacterToUse(Player p, List<CoupCharacter> availableCharacters) {
-        System.out.println("Since both your characters are available you can chose witch one of them " +
+        System.out.println("Since both your characters are available you can choose which one of them " +
                 "you want to use."
         );
 
@@ -1253,7 +1253,7 @@ public class GameMenu {
     }
 
     private void selectCharacterToLoseInfluence(Player p) {
-        System.out.println("Since you got 2 different characters that are alive you can chose witch one of them " +
+        System.out.println("Since you got 2 different characters that are alive you can chose wich one of them " +
                 "you want to sacrifice."
         );
 
