@@ -9,7 +9,8 @@ public class CoupCharacter {
     public CoupCharacter() {
     }
 
-    public CoupCharacter(String name) {
+    public CoupCharacter(Integer characterNumber, String name) {
+        this.characterNumber = characterNumber;
         this.name = name;
     }
 
