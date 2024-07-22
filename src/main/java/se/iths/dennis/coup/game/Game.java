@@ -3,6 +3,7 @@ package se.iths.dennis.coup.game;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -10,12 +11,12 @@ import java.util.stream.Collectors;
 @Service
 public class Game {
 
-    private GameBoard gameBoard;
-    private List<Player> allPlayers = new ArrayList<>();
-    private List<String> characterNames = new ArrayList<>();
-    private String errorMessage;
-    private List<String> reasons = new ArrayList<>();
-    private List<CoupCharacter> discardPile = new ArrayList<>();
+private GameBoard gameBoard;
+private List<Player> allPlayers = new ArrayList<>();
+private List<String> characterNames = new ArrayList<>();
+private String errorMessage;
+private List<String> reasons = new ArrayList<>();
+private List<CoupCharacter> discardPile = new ArrayList<>();
 
     public List<Player> getAllPlayers() {
         return allPlayers;
@@ -48,24 +49,33 @@ public class Game {
     public void createGameBoard() {
         gameBoard = new GameBoard();
 
-        characterNames.add("Duke");
-        characterNames.add("Assassin");
-        characterNames.add("Ambassador");
-        characterNames.add("Captain");
-        characterNames.add("Contessa");
+        characterNames = Arrays.asList("Duke", "Assassin", "Ambassador", "Captain", "Contessa");
 
         List<CoupCharacter> characters = new ArrayList<>();
 
-        for (String name : characterNames) {
+        int number = 0;
+
+        while (characters.size() < 15) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(characterNames.size());
+            
+            String randomName = characterNames.get(randomIndex);
+            
+            if(characters.stream().filter(c -> c.getName().equals(randomName)).count() < 3){
+                number++;
+                characters.add(new CoupCharacter(number, randomName));
+            }
+        }
+
+        /* for (String name : characterNames) {
 
             for (int i = 0; i < 3; i++) {
-                characters.add(new CoupCharacter(name));
+                characters.add(new CoupCharacter(number + 1, name));
             }
         }
 
         for (int i = 0; i < 15; i++) {
             characters.get(i).setCharacterNumber(i + 1);
-        }
+        } */
 
         gameBoard.setCourtDeck(characters);
     }
@@ -118,14 +128,14 @@ public class Game {
 
         ThreadLocalRandom.current()
                 .ints(0, allCharacterNumbers.size())
-                .distinct().limit(numberOfRandomPositions)
+                .distinct()
+                .limit(numberOfRandomPositions)
                 .forEach(characterNumber -> selectedPositionsOfCharacterNumbers.add(characterNumber));
 
         return selectedPositionsOfCharacterNumbers;
     }
 
     public List<Player> getActiveOpponents(Player p) {
-
         return allPlayers.stream().filter(o -> !o.equals(p) && !o.isOut()).collect(Collectors.toList());
     }
 
