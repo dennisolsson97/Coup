@@ -56,24 +56,29 @@ public class GameMenu {
 
     private void prepareNormalGame() {
         for (Player p : game.getAllPlayers()) {
-
             p.setCoins(2);
             game.getGameBoard().setTreasury(-2);
 
-            List<Integer> selectedPositionsOfCharacters = game.generateRandomCharactersPositions(2);
+            //List<Integer> selectedPositionsOfCharacters = game.generateRandomCharactersPositions(2);
 
-            List<CoupCharacter> selectedCharacters = game.findCharactersByPosition(selectedPositionsOfCharacters);
+            //List<CoupCharacter> selectedCharacters = game.findCharactersByPosition(selectedPositionsOfCharacters);
 
-            p.setCharacters(selectedCharacters);
+            //p.setCharacters(selectedCharacters);
 
-            selectedCharacters.forEach(c -> game.getGameBoard().getCourtDeck().remove(c));
+            //selectedCharacters.forEach(c -> game.getGameBoard().getCourtDeck().remove(c));
+        }
+
+        for (int i = 0; i < 2; i++){
+            for (Player p : game.getAllPlayers()){
+                p.getCharacters().add(game.getGameBoard().getCourtDeck().get(0));
+                game.getGameBoard().getCourtDeck().remove(0);
+            }
         }
 
         viewCharacters();
     }
 
     private void prepare2PlayersGame() {
-
         for (Player p : game.getAllPlayers()) {
 
             if (p.getPlayerNumber() == game.getAllPlayers().get(0).getPlayerNumber()) {
