@@ -706,7 +706,7 @@ public class GameMenu {
         }
 
         else {
-            System.out.println("Chose the opponent you want to steal from by typing his/her player-number");
+            System.out.println("Choose the opponent you want to steal from by typing his/her player-number");
             opponent = selectOpponent(opponentsToStealFrom);
         }
 
@@ -728,6 +728,7 @@ public class GameMenu {
                     System.out.println("Well, since you actually had Captain " + p.getName() + ", " +
                             opponent.getName() + " will now lose a character and your Steal will go through!");
 
+                    game.steal(p, opponent);
                     System.out.println("Now hand over the computer to " + opponent.getName());
                     System.out.println("Hello " + opponent.getName() + " you will now lose a character!");
                     System.out.println("Press Enter!");
@@ -746,11 +747,6 @@ public class GameMenu {
                         System.out.println("Press Enter!");
                         sc.nextLine();
                         game.getANewCharacter(p, "Captain");
-
-                        System.out.println("And now you will make your Steal!");
-                        System.out.println("Press Enter!");
-                        sc.nextLine();
-                        game.steal(p, opponent);
                     }
                 }
 
