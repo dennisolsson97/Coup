@@ -16,7 +16,6 @@ private List<Player> allPlayers = new ArrayList<>();
 private List<String> characterNames = new ArrayList<>();
 private String errorMessage;
 private List<String> reasons = new ArrayList<>();
-private List<CoupCharacter> discardPile = new ArrayList<>();
 
     public List<Player> getAllPlayers() {
         return allPlayers;
@@ -38,26 +37,14 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
         return reasons;
     }
 
-    public List<CoupCharacter> getDiscardPile() {
-        return discardPile;
-    }
-
-    public void setDiscardPile(List<CoupCharacter> discardPile) {
-        this.discardPile = discardPile;
-    }
-
     public void createGameBoard() {
         gameBoard = new GameBoard();
-
         characterNames = Arrays.asList("Duke", "Assassin", "Ambassador", "Captain", "Contessa");
-
         List<CoupCharacter> characters = new ArrayList<>();
-
         int number = 0;
 
         while (characters.size() < 15) {
             int randomIndex = ThreadLocalRandom.current().nextInt(characterNames.size());
-            
             String randomName = characterNames.get(randomIndex);
             
             if(characters.stream().filter(c -> c.getName().equals(randomName)).count() < 3){
@@ -65,17 +52,6 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
                 characters.add(new CoupCharacter(number, randomName));
             }
         }
-
-        /* for (String name : characterNames) {
-
-            for (int i = 0; i < 3; i++) {
-                characters.add(new CoupCharacter(number + 1, name));
-            }
-        }
-
-        for (int i = 0; i < 15; i++) {
-            characters.get(i).setCharacterNumber(i + 1);
-        } */
 
         gameBoard.setCourtDeck(characters);
     }
@@ -105,34 +81,16 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
         return -3;
     }
 
-    public List<CoupCharacter> findCharactersByPosition(List<Integer> selectedPositionsOfCharacterNumbers) {
+    public List<CoupCharacter> getRandomCharacters(Integer numberOfRandomCharacters) {
+        List<CoupCharacter> randomCharacters = new ArrayList<>();
 
-        List<CoupCharacter> selectedCharacters = new ArrayList<>();
-
-        for (Integer position : selectedPositionsOfCharacterNumbers) {
-
-            selectedCharacters.add(gameBoard.getCourtDeck().get(position));
+        while (randomCharacters.size() < numberOfRandomCharacters) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(gameBoard.getCourtDeck().size());
+            randomCharacters.add(gameBoard.getCourtDeck().get(randomIndex));
+            gameBoard.getCourtDeck().remove(randomIndex);
         }
 
-        return selectedCharacters;
-    }
-
-    public List<Integer> generateRandomCharactersPositions(Integer numberOfRandomPositions) {
-        List<Integer> allCharacterNumbers = gameBoard
-                .getCourtDeck()
-                .stream()
-                .map(c -> c.getCharacterNumber())
-                .collect(Collectors.toList());
-
-        List<Integer> selectedPositionsOfCharacterNumbers = new ArrayList<>();
-
-        ThreadLocalRandom.current()
-                .ints(0, allCharacterNumbers.size())
-                .distinct()
-                .limit(numberOfRandomPositions)
-                .forEach(characterNumber -> selectedPositionsOfCharacterNumbers.add(characterNumber));
-
-        return selectedPositionsOfCharacterNumbers;
+        return randomCharacters;
     }
 
     public List<Player> getActiveOpponents(Player p) {
@@ -143,27 +101,12 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
         return allPlayers.stream().filter(o -> !o.equals(p)).collect(Collectors.toList());
     }
 
-    public void executeCharacter(Player selectedOpponent, CoupCharacter characterToBeExecuted) {
-
-        for (CoupCharacter c:selectedOpponent.getCharacters()) {
-
-                    if(c.getCharacterNumber() == characterToBeExecuted.getCharacterNumber()){
-                        c.setDead(true);
-
-                        if(getLivingCharacters(selectedOpponent).isEmpty()){
-                            selectedOpponent.setOut(true);
-
-                            System.out.println("You have lost both your characters " + selectedOpponent.getName()
-                                    + " and are now out of the game!");
-
-                            if(selectedOpponent.getCoins()>0){
-                                gameBoard.setTreasury(selectedOpponent.getCoins());
-                                selectedOpponent.setCoins(-selectedOpponent.getCoins());
-                            }
-                        }
-                    }
+    public void executeCharacter(Player p, CoupCharacter characterToBeExecuted) {
+        for (CoupCharacter c:p.getCharacters()) {
+            if(c.getCharacterNumber() == characterToBeExecuted.getCharacterNumber()){
+                c.setDead(true);
+            }
                 }
-
     }
 
     public String verifyStatement(Player p, String characterName) {
@@ -173,18 +116,15 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
             return "truth";
         }
 
-        else {
-            return "bluff";
-        }
+        return "bluff";
+        
     }
 
     public List<CoupCharacter> getLivingCharacters(Player p) {
-        
         return p.getCharacters().stream().filter(c -> !c.isDead()).collect(Collectors.toList());
     }
 
     public String checkOwnCharacterAble(Player p) {
-
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
 
         if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
@@ -318,12 +258,10 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
 
     }
 
-    public void getANewCharacter(Player p, String characterName) {
-
+    public void getNewCharacter(Player p, String characterName) {
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
 
         for (int i = 0; i < livingCharacters.size(); i++) {
-
             if(livingCharacters.get(i).getName().equals(characterName)){
                 gameBoard.getCourtDeck().add(livingCharacters.get(i));
                 p.getCharacters().remove(livingCharacters.get(i));
@@ -331,16 +269,10 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
             }
         }
 
-        List<Integer> randomPositionsOfCharacters = generateRandomCharactersPositions(1);
-
-        List<CoupCharacter> randomCharacters = findCharactersByPosition(randomPositionsOfCharacters);
-
+        List<CoupCharacter> randomCharacters = getRandomCharacters(1);
         p.getCharacters().add(randomCharacters.get(0));
-
-        gameBoard.getCourtDeck().remove(randomCharacters.get(0));
-
         System.out.println("Alright " + p.getName() + " your new character is: " +
-                randomCharacters.get(0).getName());
+                randomCharacters.get(0).getName());      
     }
 
     public String checkBluffAble(Player p) {
@@ -381,22 +313,25 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
     }
 
     private List<String> getOtherCharactersNames(Player p) {
-        List<String> namesOfLivingCharacters = getLivingCharacters(p).stream().
-                map(c -> c.getName()).
-                collect(Collectors.toList());
+        List<String> namesOfLivingCharacters = getLivingCharacters(p)
+        .stream()
+        .map(c -> c.getName())
+        .collect(Collectors.toList());
 
         if(namesOfLivingCharacters.size() == 1 || namesOfLivingCharacters.size() == 2 &&
                 namesOfLivingCharacters.get(0).equals(namesOfLivingCharacters.get(1))){
 
-            return characterNames.stream().
-                    filter(n -> !n.equals(namesOfLivingCharacters.get(0))).
-                    collect(Collectors.toList());
+            return characterNames
+            .stream()
+            .filter(n -> !n.equals(namesOfLivingCharacters.get(0)))
+            .collect(Collectors.toList());
         }
 
         else {
-            return characterNames.stream().
-                    filter(n -> !n.equals(namesOfLivingCharacters.get(0)) && !n.equals(namesOfLivingCharacters.get(1))).
-                    collect(Collectors.toList());
+            return characterNames
+            .stream()
+            .filter(n -> !n.equals(namesOfLivingCharacters.get(0)) && !n.equals(namesOfLivingCharacters.get(1)))
+            .collect(Collectors.toList());
         }
     }
 
@@ -426,12 +361,10 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
     }
 
     public List<Player> getRemainingPlayers() {
-        
         return allPlayers.stream().filter(p -> !p.isOut()).collect(Collectors.toList());
     }
 
     public void steal(Player p, Player opponent) {
-
         if(opponent.getCoins() == 1){
             p.setCoins(1);
             opponent.setCoins(-1);
@@ -441,39 +374,6 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
             p.setCoins(2);
             opponent.setCoins(-2);
         }
-    }
-
-    public void makeSpace() {
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
     }
 
     public void rearrangePlayers() {
@@ -502,14 +402,12 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
     }
 
     public void resetGameBoard() {
-
         if(allPlayers.size() == 2){
-            discardPile.forEach(c -> gameBoard.getCourtDeck().add(c));
-            discardPile = new ArrayList<>();
+            gameBoard.getDiscardPile().forEach(c -> gameBoard.getCourtDeck().add(c));
+            gameBoard.setDiscardPile(new ArrayList<>());
         }
 
         for (Player p:allPlayers) {
-
             if(p.getCoins() > 0){
                 gameBoard.setTreasury(p.getCoins());
                 p.setCoins(-p.getCoins());
@@ -522,7 +420,6 @@ private List<CoupCharacter> discardPile = new ArrayList<>();
     }
 
     public void resetPlayers() {
-
         for (Player p:allPlayers) {
             p.setLatestWinner(false);
             p.setOut(false);
