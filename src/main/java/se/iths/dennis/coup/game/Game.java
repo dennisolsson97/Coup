@@ -436,4 +436,11 @@ private List<String> reasons = new ArrayList<>();
         }
         return allPlayers.get(i);
     }
+
+    public boolean isGameOver() {
+        if(getRemainingPlayers().size() == 1){
+            return true;
+        }
+        return false;
+    }
 }

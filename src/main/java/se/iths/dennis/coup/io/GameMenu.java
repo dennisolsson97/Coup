@@ -158,34 +158,29 @@ public class GameMenu {
 
     private void playGame() {
         boolean loop = true;
-        List<Player> allPlayers = game.getAllPlayers();
 
         while (loop) {            
-         for (int i = 0; i < allPlayers.size(); i++) {
+         for (int i = 0; i < game.getAllPlayers().size(); i++) {
                 Player p = game.getNextPlayer(i);
-                
 
-                List<Player> remainingPlayers = game.getRemainingPlayers();
-
-                if (remainingPlayers.size() == 1) {
-                    remainingPlayers.get(0).setLatestWinner(true);
-                    System.out.println("The game is over and the winner is " + 
-                    remainingPlayers.get(0).getName());
+                if (game.isGameOver()) {
+                    p.setLatestWinner(true);
+                    System.out.println("The game is over and the winner is " + p.getName());
                     System.out.println("Press Enter!");
                     sc.nextLine();
                     loop = false;
                     break;
                 }
 
-                if (allPlayers.get(i).getCoins() >= 10) {
-                    System.out.println("Alright " + allPlayers.get(i).getName() + " since you have " +
-                            allPlayers.get(i).getCoins() + " coins you " +
+                if (p.getCoins() >= 10) {
+                    System.out.println("Alright " + p.getName() + " since you have " +
+                            p.getCoins() + " coins you " +
                             "have to launch a coup!");
-                    launchCoup(allPlayers.get(i));
+                    launchCoup(p);
                 }
 
                 else {
-                    showMainMenu(allPlayers.get(i));
+                    showMainMenu(p);
                 }
 
                 makeSpace();
