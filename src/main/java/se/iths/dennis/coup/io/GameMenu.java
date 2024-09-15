@@ -162,12 +162,8 @@ public class GameMenu {
 
         while (loop) {            
          for (int i = 0; i < allPlayers.size(); i++) {
-                while (allPlayers.get(i).isOut()) {
-                    i++;
-                    if (i == allPlayers.size()) {
-                        i = 0;
-                    }
-                }
+                Player p = game.getNextPlayer(i);
+                
 
                 List<Player> remainingPlayers = game.getRemainingPlayers();
 
@@ -244,7 +240,6 @@ public class GameMenu {
 
         while (loop) {
             showOptions();
-
             System.out.println("It's your turn " + p.getName() + ", choose one of the above options!");
             System.out.print("choice:");
             int choice = sc.nextInt();

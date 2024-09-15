@@ -426,4 +426,14 @@ private List<String> reasons = new ArrayList<>();
         }
 
     }
+
+    public Player getNextPlayer(int i) {
+        while (allPlayers.get(i).isOut()) {
+            i++;
+            if (i == allPlayers.size()) {
+                i = 0;
+            }
+        }
+        return allPlayers.get(i);
+    }
 }
