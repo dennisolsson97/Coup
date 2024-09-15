@@ -101,12 +101,8 @@ private List<String> reasons = new ArrayList<>();
         return allPlayers.stream().filter(o -> !o.equals(p)).collect(Collectors.toList());
     }
 
-    public void executeCharacter(Player p, CoupCharacter characterToBeExecuted) {
-        for (CoupCharacter c:p.getCharacters()) {
-            if(c.getCharacterNumber() == characterToBeExecuted.getCharacterNumber()){
-                c.setDead(true);
-            }
-                }
+    public void executeCharacter(Player p, CoupCharacter characterToExecute) {
+        getLivingCharacters(p).stream().filter(c -> c.equals(characterToExecute)).forEach(c -> c.setDead(true));
     }
 
     public String verifyStatement(Player p, String statement) {
