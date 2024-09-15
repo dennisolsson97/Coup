@@ -109,10 +109,10 @@ private List<String> reasons = new ArrayList<>();
                 }
     }
 
-    public String verifyStatement(Player p, String characterName) {
+    public String verifyStatement(Player p, String statement) {
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
 
-        if(livingCharacters.stream().filter(c -> c.getName().equals(characterName)).count() > 0){
+        if(livingCharacters.stream().filter(c -> c.getName().equals(statement)).count() > 0){
             return "truth";
         }
 
