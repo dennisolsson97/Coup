@@ -158,7 +158,7 @@ public class GameMenu {
 
     private void playGame() {
         boolean loop = true;
-
+        
         while (loop) {            
          for (int i = 0; i < game.getAllPlayers().size(); i++) {
                 Player p = game.getNextPlayer(i);
@@ -173,8 +173,8 @@ public class GameMenu {
                 }
 
                 if (p.getCoins() >= 10) {
-                    System.out.println("Alright " + p.getName() + " since you have " +
-                            p.getCoins() + " coins you " +
+                    System.out.println("Alright " + p.getName() + " since you have " 
+                    + p.getCoins() + " coins you " +
                             "have to launch a coup!");
                     launchCoup(p);
                 }
@@ -1097,7 +1097,7 @@ public class GameMenu {
         } 
         
         else {
-            System.out.println("Since you got 2 different characters that are alive you can chose wich one of them " +
+            System.out.println("Since you got 2 different characters that are alive you can choose wich one of them " +
                 "you want to sacrifice."
         );
             CoupCharacter selectedCharacter = selectCharacters(1, livingCharacters).get(0);
@@ -1106,16 +1106,13 @@ public class GameMenu {
 
         if(game.getLivingCharacters(p).isEmpty()){
             p.setOut(true);
+            game.getGameBoard().setTreasury(p.getCoins());
+            p.setCoins(-p.getCoins());
             System.out.println("You have lost both your characters " + p.getName()
                             + " and are now out of the game!");
             System.out.println("Press Enter!");
             sc.nextLine();
-
-                    if(p.getCoins()>0){
-                        game.getGameBoard().setTreasury(p.getCoins());
-                        p.setCoins(-p.getCoins());
-                    }
-                }
+        }
     }
 
     private Player selectOpponent(List<Player> opponents) {
