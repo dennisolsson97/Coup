@@ -158,10 +158,9 @@ public class GameMenu {
 
     private void playGame() {
         boolean loop = true;
-        
         while (loop) {            
          for (int i = 0; i < game.getAllPlayers().size(); i++) {
-                Player p = game.getNextPlayer(i);
+                Player p = game.getAllPlayers().get(i = game.getNextPlayer(i));
 
                 if (game.isGameOver()) {
                     p.setLatestWinner(true);
