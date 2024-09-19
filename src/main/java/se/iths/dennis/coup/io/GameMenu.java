@@ -64,15 +64,15 @@ public class GameMenu {
     }
 
     private void dealCharacters(int numberOfCharacters) {
-        for (int i = 0; i < numberOfCharacters; i++){
-            for (Player p : game.getAllPlayers()){
+        for (int i = 0; i < numberOfCharacters; i++) {
+            for (Player p : game.getAllPlayers()) {
                 p.getCharacters().add(game.getGameBoard().getCourtDeck().get(0));
                 game.getGameBoard().getCourtDeck().remove(0);
             }
         }
     }
 
-    private List<CoupCharacter> selectCharacters(int numberOfCharacters,List<CoupCharacter> characters){
+    private List<CoupCharacter> selectCharacters(int numberOfCharacters, List<CoupCharacter> characters) {
         List<CoupCharacter> selectedCharacters = new ArrayList<>();
 
         while (selectedCharacters.size() < numberOfCharacters) {
@@ -85,10 +85,10 @@ public class GameMenu {
 
             if (characters.stream().filter(c -> c.getCharacterNumber() == choice).count() == 1) {
                 CoupCharacter selectedCharacter = characters
-            .stream()
-            .filter(c -> c.getCharacterNumber() == choice)
-            .collect(Collectors.toList())
-            .get(0);
+                        .stream()
+                        .filter(c -> c.getCharacterNumber() == choice)
+                        .collect(Collectors.toList())
+                        .get(0);
                 selectedCharacters.add(selectedCharacter);
                 characters.remove(selectedCharacter);
             }
@@ -112,13 +112,13 @@ public class GameMenu {
             System.out.println(p.getName() + " it's your turn to choose one of five characters. " +
                     "Make sure that your opponent doesn't look at the screen and then press Enter!");
             sc.nextLine();
-            
-            List<CoupCharacter> selectedCharacters = selectCharacters(1,p.getCharacters());
+
+            List<CoupCharacter> selectedCharacters = selectCharacters(1, p.getCharacters());
             p.getCharacters().add(selectedCharacters.get(0));
             List<CoupCharacter> noneSelectedCharacters = p.getCharacters()
-            .stream()
-            .filter(c -> c.getCharacterNumber() != selectedCharacters.get(0).getCharacterNumber())
-            .collect(Collectors.toList());
+                    .stream()
+                    .filter(c -> c.getCharacterNumber() != selectedCharacters.get(0).getCharacterNumber())
+                    .collect(Collectors.toList());
 
             noneSelectedCharacters.forEach(c -> game.getGameBoard().getDiscardPile().add(c));
             noneSelectedCharacters.forEach(c -> p.getCharacters().remove(c));
@@ -141,8 +141,8 @@ public class GameMenu {
                     + " don't look at the screen and then press Enter");
             sc.nextLine();
 
-            System.out.println("Your characters are: " + 
-            game.getAllPlayers().get(i).getCharacters().get(0).getName()
+            System.out.println("Your characters are: " +
+                    game.getAllPlayers().get(i).getCharacters().get(0).getName()
                     + ", "
                     + game.getAllPlayers().get(i).getCharacters().get(1).getName());
 
@@ -156,8 +156,8 @@ public class GameMenu {
 
     private void playGame() {
         boolean loop = true;
-        while (loop) {            
-         for (int i = 0; i < game.getAllPlayers().size(); i++) {
+        while (loop) {
+            for (int i = 0; i < game.getAllPlayers().size(); i++) {
                 Player p = game.getAllPlayers().get(i = game.getNextPlayer(i));
 
                 if (isGameOver(p)) {
@@ -165,25 +165,36 @@ public class GameMenu {
                     break;
                 }
 
-                if (p.getCoins() >= 10) {
-                    System.out.println("Alright " + p.getName() + " since you have " 
-                    + p.getCoins() + " coins you " +
-                            "have to launch a coup!");
-                    launchCoup(p);
-                }
-
                 else {
-                    showMainMenu(p);
+                    startTurn(p);
                 }
 
                 makeSpace();
             }
         }
-        continueOrQuitMenu();
+        startNewGame();
+    }
+
+    private void startTurn(Player p) {
+        System.out.println("It's the turn of " + p.getName() + ", make sure the right person has the " +
+                "computer and the press Enter!");
+        sc.nextLine();
+        makeSpace();
+
+        if (p.getCoins() >= 10) {
+            System.out.println("Alright " + p.getName() + " since you have "
+                    + p.getCoins() + " coins you " +
+                    "have to launch a coup!");
+            launchCoup(p);
+        }
+
+        else {
+            showMainMenu(p);
+        }
     }
 
     private boolean isGameOver(Player p) {
-        if(game.getRemainingPlayers().size() == 1){
+        if (game.getRemainingPlayers().size() == 1) {
             p.setLatestWinner(true);
             System.out.println("The game is over and the winner is " + p.getName());
             System.out.println("Press Enter!");
@@ -193,11 +204,11 @@ public class GameMenu {
         return false;
     }
 
-    private void continueOrQuitMenu() {
+    private void startNewGame() {
         System.out.println("Do you want to start a new game?");
         String answer = answerQuestion();
 
-        if(answer.equals("Yes")){
+        if (answer.equals("Yes")) {
             game.resetGameBoard();
 
             System.out.println("Do you want to play with the same players again? If not you will register number of" +
@@ -205,15 +216,15 @@ public class GameMenu {
 
             answer = answerQuestion();
 
-            if(answer.equals("Yes")){
+            if (answer.equals("Yes")) {
 
-                if(!game.getAllPlayers().get(0).isLatestWinner()){
+                if (!game.getAllPlayers().get(0).isLatestWinner()) {
                     game.rearrangePlayers();
                 }
 
                 game.resetPlayers();
 
-                if(game.getAllPlayers().size() == 2){
+                if (game.getAllPlayers().size() == 2) {
                     prepare2PlayersGame();
                 }
 
@@ -222,13 +233,13 @@ public class GameMenu {
                 }
             }
 
-            else if(answer.equals("No")){
+            else if (answer.equals("No")) {
                 game.setAllPlayers(new ArrayList<>());
                 createNewPlayers();
             }
         }
 
-        else if(answer.equals("No")){
+        else if (answer.equals("No")) {
             System.out.println("Alright see you next time!");
         }
     }
@@ -436,8 +447,7 @@ public class GameMenu {
 
             else {
                 System.out.println("Since both your characters are available you can choose which one of them " +
-                "you want to use."
-        );
+                        "you want to use.");
                 List<CoupCharacter> selectedCharacters = selectCharacters(1, availableCharacters);
                 claim(p, selectedCharacters.get(0).getName());
             }
@@ -482,15 +492,15 @@ public class GameMenu {
                 "Please be honest, no cheating!");
         String answer = answerQuestion();
 
-        if(answer.equals("Yes")){
+        if (answer.equals("Yes")) {
             answer = challengeOrCounteraction();
 
-            if(answer.equals("Challenge")){
+            if (answer.equals("Challenge")) {
                 System.out.println("Alright, let's verify your statement " + p.getName() + ":");
 
                 if (game.verifyStatement(p, "Assassin").equals("truth")) {
 
-                    if(game.getLivingCharacters(opponent).size() == 1){
+                    if (game.getLivingCharacters(opponent).size() == 1) {
                         game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
                     }
 
@@ -532,14 +542,14 @@ public class GameMenu {
                 }
             }
 
-            else if(answer.equals("Counteraction")){
+            else if (answer.equals("Counteraction")) {
                 System.out.println("Alright " + p.getName() + " do you want to challenge the statement of " +
                         opponent.getName() + "? If you don't your Assassinate won't go through " +
                         "but if you do you might lose a character. Choose wisely!");
 
                 answer = answerQuestion();
 
-                if(answer.equals("Yes")){
+                if (answer.equals("Yes")) {
 
                     System.out.println("Alright, let's verify the statement of "
                             + opponent.getName() + ":");
@@ -569,12 +579,11 @@ public class GameMenu {
                             makeSpace();
                         }
 
-
                     }
 
                     else if (game.verifyStatement(opponent, "Contessa").equals("bluff")) {
 
-                        if(game.getLivingCharacters(opponent).size() == 1){
+                        if (game.getLivingCharacters(opponent).size() == 1) {
                             game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
                         }
 
@@ -594,7 +603,7 @@ public class GameMenu {
                     }
                 }
 
-                else if(answer.equals("No")){
+                else if (answer.equals("No")) {
                     System.out.println("Your Assassinate didn't go through " + p.getName());
                     System.out.println("Press Enter!");
                     sc.nextLine();
@@ -602,7 +611,7 @@ public class GameMenu {
             }
         }
 
-        else if(answer.equals("No")){
+        else if (answer.equals("No")) {
             System.out.println("Now hand over the computer to "
                     + opponent.getName());
 
@@ -637,10 +646,10 @@ public class GameMenu {
 
         String answer = answerQuestion();
 
-        if(answer.equals("Yes")){
+        if (answer.equals("Yes")) {
             answer = challengeOrCounteraction();
 
-            if(answer.equals("Challenge")){
+            if (answer.equals("Challenge")) {
                 System.out.println("Alright, let's verify your statement " + p.getName() + ":");
 
                 if (game.verifyStatement(p, "Captain").equals("truth")) {
@@ -680,14 +689,14 @@ public class GameMenu {
                 }
             }
 
-            else if(answer.equals("Counteraction")){
+            else if (answer.equals("Counteraction")) {
                 System.out.println("Alright " + p.getName() + " do you want to challenge the statement of " +
                         opponent.getName() + "? If you don't your Steal won't to through but if you do you might lose" +
                         " a character. Chose wisely!");
 
                 answer = answerQuestion();
 
-                if(answer.equals("Yes")){
+                if (answer.equals("Yes")) {
                     System.out.println("So does " + opponent.getName() + " claim Captain or Ambassador?");
                     answer = captainOrAmbassador();
 
@@ -722,7 +731,6 @@ public class GameMenu {
                             makeSpace();
                         }
 
-
                     } else if (game.verifyStatement(opponent, answer).equals("bluff")) {
                         game.steal(p, opponent);
                         System.out.println("Your Steal went through " + p.getName()
@@ -741,7 +749,7 @@ public class GameMenu {
                     }
                 }
 
-                else if(answer.equals("No")){
+                else if (answer.equals("No")) {
                     System.out.println("Your Steal didn't go through " + p.getName());
                     System.out.println("Press Enter!");
                     sc.nextLine();
@@ -749,7 +757,7 @@ public class GameMenu {
             }
         }
 
-        else if(answer.equals("No")){
+        else if (answer.equals("No")) {
             game.steal(p, opponent);
             System.out.println("Your steal went through " + p.getName());
             System.out.println("Press Enter!");
@@ -878,11 +886,11 @@ public class GameMenu {
                 + randomCharacters.get(0).getName() + ", " + randomCharacters.get(1).getName());
 
         System.out.println("Choose which 2 of your living characters you want to hand in to Court deck by typing"
-                    + " their characternumbers");
+                + " their characternumbers");
 
         List<CoupCharacter> selectedCharacters = selectCharacters(2, game.getLivingCharacters(p));
         selectedCharacters.forEach(c -> p.getCharacters().remove(c));
-        selectedCharacters.forEach(c -> game.getGameBoard().getCourtDeck().add(c)); 
+        selectedCharacters.forEach(c -> game.getGameBoard().getCourtDeck().add(c));
     }
 
     private void dukeMenu(Player p) {
@@ -916,7 +924,7 @@ public class GameMenu {
 
                 loseInfluence(opponent);
 
-                if(game.getRemainingPlayers().size() > 1) {
+                if (game.getRemainingPlayers().size() > 1) {
 
                     makeSpace();
 
@@ -1011,7 +1019,6 @@ public class GameMenu {
                         makeSpace();
                     }
 
-
                 } else if (result.equals("bluff")) {
                     p.setCoins(game.foreignAid());
                     System.out.println("Your Foreign Aid went through " + p.getName()
@@ -1097,22 +1104,21 @@ public class GameMenu {
         if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
                 livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
             game.executeCharacter(p, livingCharacters.get(0));
-        } 
-        
+        }
+
         else {
             System.out.println("Since you got 2 different characters that are alive you can choose wich one of them " +
-                "you want to sacrifice."
-        );
+                    "you want to sacrifice.");
             CoupCharacter selectedCharacter = selectCharacters(1, livingCharacters).get(0);
             game.executeCharacter(p, selectedCharacter);
         }
 
-        if(game.getLivingCharacters(p).isEmpty()){
+        if (game.getLivingCharacters(p).isEmpty()) {
             p.setOut(true);
             game.getGameBoard().setTreasury(p.getCoins());
             p.setCoins(-p.getCoins());
             System.out.println("You have lost both your characters " + p.getName()
-                            + " and are now out of the game!");
+                    + " and are now out of the game!");
             System.out.println("Press Enter!");
             sc.nextLine();
         }
@@ -1146,9 +1152,8 @@ public class GameMenu {
     }
 
     private void makeSpace() {
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 40; i++) {
             System.out.println();
         }
     }
 }
-
