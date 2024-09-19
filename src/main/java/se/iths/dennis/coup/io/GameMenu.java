@@ -106,7 +106,6 @@ public class GameMenu {
         game.getAllPlayers().get(0).setCoins(1);
         game.getAllPlayers().get(1).setCoins(2);
         game.getGameBoard().setTreasury(-3);
-
         dealCharacters(5);
 
         for (Player p : game.getAllPlayers()) {
@@ -126,8 +125,7 @@ public class GameMenu {
 
             List<CoupCharacter> randomCharacters = game.getRandomCharacters(1);
             p.getCharacters().add(randomCharacters.get(0));
-            System.out.println("Finally you have this random character added to your hand: " + 
-            randomCharacters.get(0).getName());
+            System.out.println("Finally you got this random character: " + randomCharacters.get(0).getName());
             System.out.println("press Enter!");
             sc.nextLine();
             makeSpace();
@@ -162,11 +160,7 @@ public class GameMenu {
          for (int i = 0; i < game.getAllPlayers().size(); i++) {
                 Player p = game.getAllPlayers().get(i = game.getNextPlayer(i));
 
-                if (game.isGameOver()) {
-                    p.setLatestWinner(true);
-                    System.out.println("The game is over and the winner is " + p.getName());
-                    System.out.println("Press Enter!");
-                    sc.nextLine();
+                if (isGameOver(p)) {
                     loop = false;
                     break;
                 }
@@ -185,8 +179,18 @@ public class GameMenu {
                 makeSpace();
             }
         }
-
         continueOrQuitMenu();
+    }
+
+    private boolean isGameOver(Player p) {
+        if(game.getRemainingPlayers().size() == 1){
+            p.setLatestWinner(true);
+            System.out.println("The game is over and the winner is " + p.getName());
+            System.out.println("Press Enter!");
+            sc.nextLine();
+            return true;
+        }
+        return false;
     }
 
     private void continueOrQuitMenu() {
