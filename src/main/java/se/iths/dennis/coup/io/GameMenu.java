@@ -256,7 +256,7 @@ public class GameMenu {
 
             switch (choice) {
                 case 1:
-                    game.viewCoinsAndCharacters(p);
+                    game.viewResources(p);
                     sc.nextLine();
                     makeSpace();
                     break;

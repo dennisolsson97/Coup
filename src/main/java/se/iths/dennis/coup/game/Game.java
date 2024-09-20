@@ -217,7 +217,7 @@ private List<String> reasons = new ArrayList<>();
         return getActiveOpponents(p).stream().filter(o -> o.getCoins() > 0).collect(Collectors.toList());
     }
 
-    public void viewCoinsAndCharacters(Player p) {
+    public void viewResources(Player p) {
         System.out.println("Your coins: " + p.getCoins());
 
         if(p.getCharacters().stream().filter(c -> c.isDead()).count() == 1){
