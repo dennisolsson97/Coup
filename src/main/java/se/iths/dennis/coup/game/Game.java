@@ -221,7 +221,6 @@ private List<String> reasons = new ArrayList<>();
         System.out.println("Your coins: " + p.getCoins());
 
         if(p.getCharacters().stream().filter(c -> c.isDead()).count() == 1){
-
             for (CoupCharacter c: p.getCharacters()) {
                 if(c.isDead()){
                     System.out.println("Your dead character: " + c.getName());

@@ -1,9 +1,7 @@
 package se.iths.dennis.coup.io;
-
 import se.iths.dennis.coup.game.CoupCharacter;
 import se.iths.dennis.coup.game.Game;
 import se.iths.dennis.coup.game.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,65 +9,28 @@ import java.util.stream.Collectors;
 
 public class GameMenu {
     Game game;
+    Preparer preparer;
     Scanner sc = new Scanner(System.in);
 
-    public GameMenu(Game game) {
+    public GameMenu(Game game, Preparer preparer) {
         this.game = game;
+        this.preparer = preparer;
     }
 
-    public void createNewPlayers() {
-        while (true) {
-            System.out.print("number of players:");
-            int numberOfPlayers = sc.nextInt();
-            sc.nextLine();
+    public void doPreparations(){
+        preparer.createNewPlayers();
+        decideGameType();
+    }
 
-            if (2 <= numberOfPlayers && numberOfPlayers <= 6) {
-
-                List<Player> allPlayers = new ArrayList<>();
-
-                System.out.println("Now let all the players type their names!");
-
-                for (int i = 0; i < numberOfPlayers; i++) {
-                    System.out.println("name of player number " + (i + 1) + ":");
-                    String name = sc.nextLine();
-
-                    allPlayers.add(new Player(i + 1, name));
-                }
-
-                game.setAllPlayers(allPlayers);
-                break;
-            } else {
-                System.out.println("Wrong, you must be 2-6 players! Type again!");
-            }
-        }
-
+    private void decideGameType() {
         if (game.getAllPlayers().size() == 2) {
             prepare2PlayersGame();
         }
 
         else {
-            prepareNormalGame();
+            preparer.prepareNormalGame();
         }
-
-    }
-
-    private void prepareNormalGame() {
-        for (Player p : game.getAllPlayers()) {
-            p.setCoins(2);
-            game.getGameBoard().setTreasury(-2);
-        }
-
-        dealCharacters(2);
         viewCharacters();
-    }
-
-    private void dealCharacters(int numberOfCharacters) {
-        for (int i = 0; i < numberOfCharacters; i++) {
-            for (Player p : game.getAllPlayers()) {
-                p.getCharacters().add(game.getGameBoard().getCourtDeck().get(0));
-                game.getGameBoard().getCourtDeck().remove(0);
-            }
-        }
     }
 
     private List<CoupCharacter> selectCharacters(int numberOfCharacters, List<CoupCharacter> characters) {
@@ -106,7 +67,7 @@ public class GameMenu {
         game.getAllPlayers().get(0).setCoins(1);
         game.getAllPlayers().get(1).setCoins(2);
         game.getGameBoard().setTreasury(-3);
-        dealCharacters(5);
+        preparer.dealCharacters(5);
 
         for (Player p : game.getAllPlayers()) {
             System.out.println(p.getName() + " it's your turn to choose one of five characters. " +
@@ -130,8 +91,6 @@ public class GameMenu {
             sc.nextLine();
             makeSpace();
         }
-
-        viewCharacters();
     }
 
     private void viewCharacters() {
@@ -210,32 +169,23 @@ public class GameMenu {
 
         if (answer.equals("Yes")) {
             game.resetGameBoard();
-
             System.out.println("Do you want to play with the same players again? If not you will register number of" +
                     " players and their names once again.");
-
             answer = answerQuestion();
 
             if (answer.equals("Yes")) {
-
                 if (!game.getAllPlayers().get(0).isLatestWinner()) {
                     game.rearrangePlayers();
                 }
 
                 game.resetPlayers();
-
-                if (game.getAllPlayers().size() == 2) {
-                    prepare2PlayersGame();
-                }
-
-                else {
-                    prepareNormalGame();
-                }
+                decideGameType();
             }
 
             else if (answer.equals("No")) {
                 game.setAllPlayers(new ArrayList<>());
-                createNewPlayers();
+                preparer.createNewPlayers();
+                decideGameType();
             }
         }
 
@@ -284,7 +234,7 @@ public class GameMenu {
 
                 case 4:
                     if (game.getGameBoard().getTreasury() >= 2) {
-                        foreignAidMenu(p);
+                        attemptForeignAid(p);
                         loop = false;
                     }
 
@@ -963,11 +913,9 @@ public class GameMenu {
         }
     }
 
-    private void foreignAidMenu(Player p) {
-        System.out.println("Now tell your opponents/opponent that you want to make" +
-                " Foreign Aid!");
-        System.out.println("Does any opponent claim to have Duke and wants to block your " +
-                "Foreign Aid? Please be honest, no cheating!");
+    private void attemptForeignAid(Player p) {
+        System.out.println("Now tell your opponents/opponent that you want to make Foreign Aid!");
+        System.out.println("Does any opponent claim Duke to block your Foreign Aid? Please be honest, no cheating!");
         String answer = answerQuestion();
 
         if (answer.equals("Yes")) {
@@ -1038,7 +986,6 @@ public class GameMenu {
             }
 
             else if (answer.equals("No")) {
-
                 System.out.println("Your Foreign Aid got blocked " + p.getName());
                 System.out.println("Press Enter!");
                 sc.nextLine();
@@ -1047,7 +994,6 @@ public class GameMenu {
 
         else if (answer.equals("No")) {
             p.setCoins(game.foreignAid());
-
             System.out.println("Your Foreign Aid went through " + p.getName());
             System.out.println("Press Enter!");
             sc.nextLine();
@@ -1063,7 +1009,6 @@ public class GameMenu {
             sc.nextLine();
 
             switch (answer) {
-
                 case 1:
                     return "Yes";
 
@@ -1074,7 +1019,6 @@ public class GameMenu {
                     System.out.println("Wrong, type again!");
             }
         }
-
     }
 
     private void launchCoup(Player p) {

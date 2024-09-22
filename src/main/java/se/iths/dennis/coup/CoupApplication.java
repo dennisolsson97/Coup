@@ -2,6 +2,7 @@ package se.iths.dennis.coup;
 
 import se.iths.dennis.coup.game.Game;
 import se.iths.dennis.coup.io.GameMenu;
+import se.iths.dennis.coup.io.Preparer;
 
 //@SpringBootApplication
 public class CoupApplication {
@@ -10,9 +11,11 @@ public class CoupApplication {
         //SpringApplication.run(CoupApplication.class, args);
         Game game = new Game();
         game.createGameBoard();
-        GameMenu gameMenu = new GameMenu(game);
-        System.out.println("Welcome to a new round of Coup! How many will play? You can be between 2-6 players");
-        gameMenu.createNewPlayers();
+        Preparer preparer = new Preparer(game);
+        GameMenu gameMenu = new GameMenu(game, preparer);
+        System.out.println("Welcome to a new round of Coup! How many will play? You can be 2-6 players");
+        gameMenu.doPreparations();
+        //gameMenu.createNewPlayers();
     }
 
 }
