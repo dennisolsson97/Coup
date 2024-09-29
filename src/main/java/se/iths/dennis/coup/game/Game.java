@@ -217,42 +217,6 @@ private List<String> reasons = new ArrayList<>();
         return getActiveOpponents(p).stream().filter(o -> o.getCoins() > 0).collect(Collectors.toList());
     }
 
-    public void viewResources(Player p) {
-        System.out.println("Your coins: " + p.getCoins());
-
-        if(p.getCharacters().stream().filter(c -> c.isDead()).count() == 1){
-            for (CoupCharacter c: p.getCharacters()) {
-                if(c.isDead()){
-                    System.out.println("Your dead character: " + c.getName());
-                }
-
-                else {
-                    System.out.println("Your living character: " + c.getName());
-                }
-            }
-
-        }
-
-        else {
-            System.out.println("Your characters: " + p.getCharacters().get(0).getName()
-                    + ", " + p.getCharacters().get(1).getName());
-        }
-
-        System.out.println("Press Enter to get back to main menu");
-    }
-
-    public void viewOpponentsAndTreasury(Player p) {
-        List<Player> opponents = getAllOpponents(p);
-
-        for (Player o:opponents) {
-            System.out.println(o + " characters: " + o.getCharacters().get(0).getStatus()
-                    + ", " + o.getCharacters().get(1).getStatus());
-        }
-        System.out.println("Treasury: " + getGameBoard().getTreasury());
-        System.out.println("Press Enter to get back to main menu");
-
-    }
-
     public void getNewCharacter(Player p, String characterName) {
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
 
@@ -334,7 +298,6 @@ private List<String> reasons = new ArrayList<>();
         List<String> availableBluffs = new ArrayList<>();
 
         for (String name:getOtherCharactersNames(p)) {
-
             if(name.equals("Ambassador")){
                 availableBluffs.add(name);
             }

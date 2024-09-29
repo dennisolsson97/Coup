@@ -10,16 +10,19 @@ import java.util.stream.Collectors;
 public class GameMenu {
     Game game;
     Preparer preparer;
+    Viewer viewer;
     Scanner sc = new Scanner(System.in);
 
-    public GameMenu(Game game, Preparer preparer) {
+    public GameMenu(Game game, Preparer preparer, Viewer viewer) {
         this.game = game;
         this.preparer = preparer;
+        this.viewer = viewer;
     }
 
     public void doPreparations(){
         preparer.createNewPlayers();
         decideGameType();
+        playGame();
     }
 
     private void decideGameType() {
@@ -30,7 +33,7 @@ public class GameMenu {
         else {
             preparer.prepareNormalGame();
         }
-        viewCharacters();
+        viewer.viewCharacters();
     }
 
     private List<CoupCharacter> selectCharacters(int numberOfCharacters, List<CoupCharacter> characters) {
@@ -91,26 +94,6 @@ public class GameMenu {
             sc.nextLine();
             makeSpace();
         }
-    }
-
-    private void viewCharacters() {
-        for (int i = 0; i < game.getAllPlayers().size(); i++) {
-            System.out.println("Alright " + game.getAllPlayers().get(i).getName() +
-                    " make sure that your opponents/opponent"
-                    + " don't look at the screen and then press Enter");
-            sc.nextLine();
-
-            System.out.println("Your characters are: " +
-                    game.getAllPlayers().get(i).getCharacters().get(0).getName()
-                    + ", "
-                    + game.getAllPlayers().get(i).getCharacters().get(1).getName());
-
-            System.out.println("Now press Enter!");
-            sc.nextLine();
-            makeSpace();
-        }
-
-        playGame();
     }
 
     private void playGame() {
@@ -198,7 +181,7 @@ public class GameMenu {
         boolean loop = true;
 
         while (loop) {
-            showOptions();
+            viewer.viewInformation(p);
             System.out.println("It's your turn " + p.getName() + ", choose one of the above options!");
             System.out.print("choice:");
             int choice = sc.nextInt();
@@ -206,18 +189,6 @@ public class GameMenu {
 
             switch (choice) {
                 case 1:
-                    game.viewResources(p);
-                    sc.nextLine();
-                    makeSpace();
-                    break;
-
-                case 2:
-                    game.viewOpponentsAndTreasury(p);
-                    sc.nextLine();
-                    makeSpace();
-                    break;
-
-                case 3:
                     if (game.getGameBoard().getTreasury() > 0) {
                         p.setCoins(game.income());
                         loop = false;
@@ -232,7 +203,7 @@ public class GameMenu {
 
                     break;
 
-                case 4:
+                case 2:
                     if (game.getGameBoard().getTreasury() >= 2) {
                         attemptForeignAid(p);
                         loop = false;
@@ -248,7 +219,7 @@ public class GameMenu {
 
                     break;
 
-                case 5:
+                case 3:
                     if (p.getCoins() < 7) {
                         System.out.println("You need at least 7 coins to launch a Coup!");
                         System.out.println("Press Enter!");
@@ -263,7 +234,7 @@ public class GameMenu {
 
                     break;
 
-                case 6:
+                case 4:
                     if (game.checkOwnCharacterAble(p).equals("able")) {
                         useOwnCharacterMenu(p);
                         loop = false;
@@ -281,7 +252,7 @@ public class GameMenu {
 
                     break;
 
-                case 7:
+                case 5:
                     if (game.checkBluffAble(p).equals("able")) {
                         bluffMenu(p);
                         loop = false;
@@ -304,17 +275,6 @@ public class GameMenu {
                     System.out.println("Wrong, type again!");
             }
         }
-    }
-
-    private void showOptions() {
-        System.out.println("===================Main Menu===================");
-        System.out.println("1.View your own coins and characters");
-        System.out.println("2.View the treasury and your opponents coins and characters");
-        System.out.println("3.Income");
-        System.out.println("4.Foreign Aid");
-        System.out.println("5.Coup");
-        System.out.println("6.Use your own character");
-        System.out.println("7.Bluff");
     }
 
     private void bluffMenu(Player p) {
