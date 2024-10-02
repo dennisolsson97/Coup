@@ -187,7 +187,10 @@ public class GameMenu {
 
             switch (choice) {
                 case 1:
-                    if(isIncomeAvailable(p)) loop = false;
+                    if(isIncomeAvailable(p)){
+                        p.setCoins(game.income());
+                        loop = false;
+                    } 
                     break;
 
                 case 2:
@@ -261,11 +264,7 @@ public class GameMenu {
     }
 
     private boolean isIncomeAvailable(Player p) {
-        if (game.getGameBoard().getTreasury() > 0) {
-            p.setCoins(game.income());
-            return true;
-        }
-        
+        if (game.getGameBoard().getTreasury() > 0) return true;
         System.out.println("The treasury is empty so you can't do Income!");
         gameContinue();
         makeSpace();
@@ -881,9 +880,8 @@ public class GameMenu {
 
     private Player getActiveOpponent(Player p) {
         List<Player> activeOpponents = game.getActiveOpponents(p);
-        if (activeOpponents.size() == 1) {
-            return activeOpponents.get(0);
-        }
+        
+        if (activeOpponents.size() == 1) return activeOpponents.get(0);
 
         return selectOpponent(activeOpponents);
     }
