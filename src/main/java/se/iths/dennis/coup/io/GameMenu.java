@@ -187,29 +187,21 @@ public class GameMenu {
 
             switch (choice) {
                 case 1:
-                    if(isIncomeAvailable(p)){
+                    if(isIncomeAvailable(p)) {
                         p.setCoins(game.income());
                         loop = false;
                     } 
                     break;
 
                 case 2:
-                    if (game.getGameBoard().getTreasury() >= 2) {
+                    if (isForeignAidAvailable()) {
                         attemptForeignAid(p);
                         loop = false;
                     }
-
-                    else {
-                        System.out.println("The treasury has less than 2 coins so you can't do " +
-                                "Foreign Aid!");
-                        gameContinue();
-                        makeSpace();
-                    }
-
                     break;
 
                 case 3:
-                    if (p.getCoins() < 7) {
+                    if (p.getCoins() >= 7) {
                         System.out.println("You need at least 7 coins to launch a Coup!");
                         gameContinue();
                         makeSpace();
@@ -261,6 +253,15 @@ public class GameMenu {
                     System.out.println("Wrong, type again!");
             }
         }
+    }
+
+    private boolean isForeignAidAvailable() {
+        if(game.getGameBoard().getTreasury() >= 2) return true;
+        System.out.println("The treasury has less than 2 coins so you can't do " +
+                                "Foreign Aid!");
+        gameContinue();
+        makeSpace();
+        return false;
     }
 
     private boolean isIncomeAvailable(Player p) {
