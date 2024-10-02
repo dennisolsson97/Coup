@@ -92,4 +92,11 @@ public class Viewer {
         System.out.println("Treasury: " + game.getGameBoard().getTreasury());
         System.out.println("Characters in Court deck: " + game.getGameBoard().getCourtDeck().size());
     }
+
+    public void viewSelectableOpponents(List<Player> selectableOpponents) {
+        for (Player o:selectableOpponents) {
+            System.out.println(o + " characters: " + o.getCharacters().get(0).getStatus()
+                    + ", " + o.getCharacters().get(1).getStatus());
+        }
+    }
 }
