@@ -134,7 +134,7 @@ private List<String> reasons = new ArrayList<>();
                 errorMessage = "Since you have less than 3 coins you can't assassinate!";
                 return "unable";
             }
-            else if (livingCharacters.get(0).getName().equals("Captain") && getOpponentsToStealFrom(p).isEmpty()) {
+            else if (livingCharacters.get(0).getName().equals("Captain") && getOpponentsWithCoins(p).isEmpty()) {
                 errorMessage = "Since none of your opponents have coins you can't steal!";
                 return "unable";
             }
@@ -159,7 +159,7 @@ private List<String> reasons = new ArrayList<>();
                 }
 
                 else if(livingCharacters.stream().filter(c -> c.getName().equals("Captain")).count() == 1 &&
-                        getOpponentsToStealFrom(p).isEmpty()){
+                        getOpponentsWithCoins(p).isEmpty()){
                     errorMessage = "Since Contessa doesn't have an action and none opponent has coins " +
                             "you can't use any of your characters!";
                     return "unable";
@@ -195,7 +195,7 @@ private List<String> reasons = new ArrayList<>();
             else if(livingCharacters.stream().filter(c -> c.getName().equals("Captain") ||
                     c.getName().equals("Assassin")).count() == 2){
 
-                if(p.getCoins() < 3 && getOpponentsToStealFrom(p).isEmpty()){
+                if(p.getCoins() < 3 && getOpponentsWithCoins(p).isEmpty()){
                     errorMessage = "Since you have less than 3 coins and none opponent has coins " +
                             "you can't use any of your characters!";
 
@@ -213,7 +213,7 @@ private List<String> reasons = new ArrayList<>();
         }
     }
 
-    public List<Player> getOpponentsToStealFrom(Player p) {
+    public List<Player> getOpponentsWithCoins(Player p) {
         return getActiveOpponents(p).stream().filter(o -> o.getCoins() > 0).collect(Collectors.toList());
     }
 
@@ -249,7 +249,7 @@ private List<String> reasons = new ArrayList<>();
                 reasons.add("You can't pretend to have Duke since the treasury has less than 3 coins.");
             }
 
-            else if(name.equals("Captain") && getOpponentsToStealFrom(p).isEmpty()){
+            else if(name.equals("Captain") && getOpponentsWithCoins(p).isEmpty()){
                 reasons.add("You can't pretend to have Captain since your opponents are out of coins.");
             }
 
@@ -306,7 +306,7 @@ private List<String> reasons = new ArrayList<>();
                 availableBluffs.add(name);
             }
 
-            else if(name.equals("Captain") && getOpponentsToStealFrom(p).size() > 0){
+            else if(name.equals("Captain") && getOpponentsWithCoins(p).size() > 0){
                 availableBluffs.add(name);
             }
 
