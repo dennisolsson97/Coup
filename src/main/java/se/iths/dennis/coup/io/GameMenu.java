@@ -187,17 +187,7 @@ public class GameMenu {
 
             switch (choice) {
                 case 1:
-                    if (game.getGameBoard().getTreasury() > 0) {
-                        p.setCoins(game.income());
-                        loop = false;
-                    }
-
-                    else {
-                        System.out.println("The treasury is empty so you can't do Income!");
-                        gameContinue();
-                        makeSpace();
-                    }
-
+                    if(isIncomeAvailable(p)) loop = false;
                     break;
 
                 case 2:
@@ -268,6 +258,18 @@ public class GameMenu {
                     System.out.println("Wrong, type again!");
             }
         }
+    }
+
+    private boolean isIncomeAvailable(Player p) {
+        if (game.getGameBoard().getTreasury() > 0) {
+            p.setCoins(game.income());
+            return true;
+        }
+        
+        System.out.println("The treasury is empty so you can't do Income!");
+        gameContinue();
+        makeSpace();
+        return false;
     }
 
     private void bluffMenu(Player p) {
@@ -913,7 +915,7 @@ public class GameMenu {
 
     private Player selectOpponent(List<Player> selectableOpponents) {
         while (true) {
-            viewer.viewSelectableOpponents(selectableOpponents);
+            viewer.viewOpponents(selectableOpponents);
             System.out.println("Choose one opponent by typing his/her player-number:");
             System.out.print("choice:");
             int choice = sc.nextInt();
