@@ -201,17 +201,10 @@ public class GameMenu {
                     break;
 
                 case 3:
-                    if (p.getCoins() >= 7) {
-                        System.out.println("You need at least 7 coins to launch a Coup!");
-                        gameContinue();
-                        makeSpace();
-                    }
-
-                    else {
+                    if (isCoupAvailable(p)) {
                         launchCoup(p);
                         loop = false;
                     }
-
                     break;
 
                 case 4:
@@ -253,6 +246,14 @@ public class GameMenu {
                     System.out.println("Wrong, type again!");
             }
         }
+    }
+
+    private boolean isCoupAvailable(Player p) {
+        if(p.getCoins() >= 7) return true;
+        System.out.println("You need at least 7 coins to launch a Coup!");
+        gameContinue();
+        makeSpace();
+        return false;
     }
 
     private boolean isForeignAidAvailable() {
