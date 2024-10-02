@@ -40,7 +40,7 @@ public class Viewer {
 
     public void viewInformation(Player p) {
         System.out.println("======================== Opponents ========================================");
-        viewOpponents(p);
+        viewOpponents(game.getAllOpponents(p));
         System.out.println("======================== Game Board =======================================");
         viewGameBoard();
         System.out.println("======================== Your Resources ===================================");
@@ -79,9 +79,7 @@ public class Viewer {
         }
     }
 
-    public void viewOpponents(Player p) {
-        List<Player> opponents = game.getAllOpponents(p);
-
+    public void viewOpponents(List<Player> opponents) {
         for (Player o:opponents) {
             System.out.println(o + " characters: " + o.getCharacters().get(0).getStatus()
                     + ", " + o.getCharacters().get(1).getStatus());
@@ -91,12 +89,5 @@ public class Viewer {
     private void viewGameBoard() {
         System.out.println("Treasury: " + game.getGameBoard().getTreasury());
         System.out.println("Characters in Court deck: " + game.getGameBoard().getCourtDeck().size());
-    }
-
-    public void viewSelectableOpponents(List<Player> selectableOpponents) {
-        for (Player o:selectableOpponents) {
-            System.out.println(o + " characters: " + o.getCharacters().get(0).getStatus()
-                    + ", " + o.getCharacters().get(1).getStatus());
-        }
     }
 }
