@@ -208,29 +208,35 @@ public class GameMenu {
                     break;
 
                 case 4:
-                    if (game.checkOwnCharacterAble(p).equals("able")) {
-                        useOwnCharacterMenu(p);
+                    List<String> availableCharacters = game.getAvailableStatements(p, game.getCharacterNames(p));
+
+                    if (isOwnCharacterAvailable(availableCharacters)) {
+                        //useOwnCharacterMenu(p);
+                        useCharacter(p, getStatement(availableCharacters));
                         loop = false;
                     }
 
-                    else if (game.checkOwnCharacterAble(p).equals("unable")) {
+                    /* else if (game.checkOwnCharacterAble(p).equals("unable")) {
                         System.out.println(game.getErrorMessage());
                         System.out.println();
                         System.out.println("You need to either bluff or do an action which is not " +
                                 "bound to a specific character");
                         gameContinue();
                         makeSpace();
-                    }
+                    } */
 
                     break;
 
                 case 5:
-                    if (game.checkBluffAble(p).equals("able")) {
-                        bluffMenu(p);
+                    List<String> availableBluffs = game.getAvailableStatements(p, game.getOtherCharacters(p));
+                
+                    if (isBluffAvailable(availableBluffs)) {
+                        //bluffMenu(p);
+                        useCharacter(p, getStatement(availableBluffs));
                         loop = false;
                     }
 
-                    else if (game.checkBluffAble(p).equals("unable")) {
+                    /* else if (game.checkBluffAble(p).equals("unable")) {
                         System.out.println("You can't bluff because:");
                         game.getReasons().forEach(System.out::println);
                         System.out.println();
@@ -238,7 +244,7 @@ public class GameMenu {
                                 "which is not bound to a specific character.");
                         gameContinue();
                         makeSpace();
-                    }
+                    } */
 
                     break;
 
@@ -246,6 +252,45 @@ public class GameMenu {
                     System.out.println("Wrong, type again!");
             }
         }
+    }
+
+    private boolean isBluffAvailable(List<String> otherCharacters) {
+        if(otherCharacters.size() > 0) return true;
+        System.out.println("You can't bluff at the moment.");
+        gameContinue();
+        makeSpace();
+        return false;
+    }
+
+    private String getStatement(List<String> statements) {
+        if(statements.size() == 1 || statements.size() == 2 && 
+        statements.get(0).equals(statements.get(1))) return statements.get(0);
+        return selectStatement(statements);
+    }
+
+    private String selectStatement(List<String> statements) {
+        while (true) {
+            viewer.viewStatements(statements);
+            System.out.println("Choose statement by typing number in front of it!");
+            System.out.print("choice:");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            if ((choice - 1) >= statements.size()) {
+                System.out.println("Wrong, type again!");
+                gameContinue();
+            } 
+            
+            else return statements.get(choice - 1);   
+        }
+    }
+
+    private boolean isOwnCharacterAvailable(List<String> ownCharacters) {
+        if(ownCharacters.size() > 0) return true;
+        System.out.println("You can't use your own character(s) at the moment.");
+        gameContinue();
+        makeSpace();
+        return false;
     }
 
     private boolean isCoupAvailable(Player p) {
@@ -273,40 +318,7 @@ public class GameMenu {
         return false;
     }
 
-    private void bluffMenu(Player p) {
-        List<String> availableBluffs = game.getAvailableBluffs(p);
-
-        if (availableBluffs.size() == 1) {
-            System.out.println("Alright " + p.getName() + " you will pretend to have " + availableBluffs.get(0)
-                    + " since it's the only available bluff.");
-            gameContinue();
-            useCharacter(p, availableBluffs.get(0));
-        }
-
-        else {
-
-            while (true) {
-                System.out.println("Chose which of the following characters you will pretend to have " +
-                        "by typing it's name!");
-                availableBluffs.forEach(System.out::println);
-
-                System.out.print("Name of the character:");
-                String characterName = sc.nextLine();
-
-                if (availableBluffs.contains(characterName)) {
-                    useCharacter(p, characterName);
-                    break;
-                }
-
-                else {
-                    System.out.println("Wrong, perhaps you spelled wrong.");
-                    gameContinue();
-                }
-            }
-        }
-    }
-
-    private void useOwnCharacterMenu(Player p) {
+    /* private void useOwnCharacterMenu(Player p) {
         List<CoupCharacter> livingCharacters = game.getLivingCharacters(p);
 
         if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
@@ -355,24 +367,16 @@ public class GameMenu {
                 useCharacter(p, selectedCharacters.get(0).getName());
             }
         }
-    }
+    } */
 
-    private void useCharacter(Player p, String characterName) {
-        if (characterName.equals("Duke")) {
-            dukeMenu(p);
-        }
-
-        else if (characterName.equals("Assassin")) {
-            assassinMenu(p);
-        }
-
-        else if (characterName.equals("Ambassador")) {
-            ambassadorMenu(p);
-        }
-
-        else if (characterName.equals("Captain")) {
-            captainMenu(p);
-        }
+    private void useCharacter(Player p, String statement) {
+        if (statement.equals("Duke")) dukeMenu(p);
+        
+        else if (statement.equals("Assassin")) assassinMenu(p);
+        
+        else if (statement.equals("Ambassador")) ambassadorMenu(p);
+        
+        else if (statement.equals("Captain")) captainMenu(p);
     }
 
     private void assassinMenu(Player p) {
