@@ -113,14 +113,13 @@ private List<String> reasons = new ArrayList<>();
         }
 
         return "bluff";
-        
     }
 
     public List<CoupCharacter> getLivingCharacters(Player p) {
         return p.getCharacters().stream().filter(c -> !c.isDead()).collect(Collectors.toList());
     }
 
-    public String checkOwnCharacterAble(Player p) {
+    /* public String checkOwnCharacterAble(Player p) {
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
 
         if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
@@ -211,7 +210,7 @@ private List<String> reasons = new ArrayList<>();
                 return "able";
             }
         }
-    }
+    } */
 
     public List<Player> getOpponentsWithCoins(Player p) {
         return getActiveOpponents(p).stream().filter(o -> o.getCoins() > 0).collect(Collectors.toList());
@@ -234,8 +233,8 @@ private List<String> reasons = new ArrayList<>();
                 randomCharacters.get(0).getName());      
     }
 
-    public String checkBluffAble(Player p) {
-        List<String> otherCharactersNames = getOtherCharactersNames(p);
+    /* public String checkBluffAble(Player p) {
+        List<String> otherCharactersNames = getOtherCharacters(p);
         int availableBluffs = 0;
         reasons = new ArrayList<>();
 
@@ -269,53 +268,35 @@ private List<String> reasons = new ArrayList<>();
         else {
             return "unable";
         }
+    } */
+
+    public List<String> getOtherCharacters(Player p) {
+        List<String> ownCharacters = getCharacterNames(p);
+        return characterNames.stream().filter(n -> !ownCharacters.contains(n)).collect(Collectors.toList());
     }
 
-    private List<String> getOtherCharactersNames(Player p) {
-        List<String> namesOfLivingCharacters = getLivingCharacters(p)
-        .stream()
-        .map(c -> c.getName())
-        .collect(Collectors.toList());
+    public List<String> getAvailableStatements(Player p, List<String> characterNames) {
+        List<String> availableStatements = new ArrayList<>();
 
-        if(namesOfLivingCharacters.size() == 1 || namesOfLivingCharacters.size() == 2 &&
-                namesOfLivingCharacters.get(0).equals(namesOfLivingCharacters.get(1))){
-
-            return characterNames
-            .stream()
-            .filter(n -> !n.equals(namesOfLivingCharacters.get(0)))
-            .collect(Collectors.toList());
-        }
-
-        else {
-            return characterNames
-            .stream()
-            .filter(n -> !n.equals(namesOfLivingCharacters.get(0)) && !n.equals(namesOfLivingCharacters.get(1)))
-            .collect(Collectors.toList());
-        }
-    }
-
-    public List<String> getAvailableBluffs(Player p) {
-        List<String> availableBluffs = new ArrayList<>();
-
-        for (String name:getOtherCharactersNames(p)) {
+        for (String name:characterNames) {
             if(name.equals("Ambassador")){
-                availableBluffs.add(name);
+                availableStatements.add(name);
             }
 
             else if(name.equals("Duke") && gameBoard.getTreasury() >= 3){
-                availableBluffs.add(name);
+                availableStatements.add(name);
             }
 
             else if(name.equals("Captain") && getOpponentsWithCoins(p).size() > 0){
-                availableBluffs.add(name);
+                availableStatements.add(name);
             }
 
             else if(name.equals("Assassin") && p.getCoins() >= 3){
-                availableBluffs.add(name);
+                availableStatements.add(name);
             }
         }
 
-        return availableBluffs;
+        return availableStatements;
     }
 
     public List<Player> getRemainingPlayers() {
@@ -393,5 +374,9 @@ private List<String> reasons = new ArrayList<>();
             }
         }
         return i;
+    }
+
+    public List<String> getCharacterNames(Player p) {
+        return getLivingCharacters(p).stream().map(c -> c.getName()).collect(Collectors.toList());
     }
 }
