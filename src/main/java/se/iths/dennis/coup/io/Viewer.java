@@ -90,4 +90,10 @@ public class Viewer {
         System.out.println("Treasury: " + game.getGameBoard().getTreasury());
         System.out.println("Characters in Court deck: " + game.getGameBoard().getCourtDeck().size());
     }
+
+    public void viewStatements(List<String> statements) {
+        for (int i = 0; i < statements.size(); i++) {
+            System.out.println((i + 1) + "." + statements.get(i));
+        }
+    }
 }
