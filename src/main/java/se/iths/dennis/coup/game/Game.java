@@ -14,7 +14,6 @@ public class Game {
 private GameBoard gameBoard;
 private List<Player> allPlayers = new ArrayList<>();
 private List<String> characterNames = new ArrayList<>();
-private String errorMessage;
 private List<String> reasons = new ArrayList<>();
 
     public List<Player> getAllPlayers() {
@@ -27,10 +26,6 @@ private List<String> reasons = new ArrayList<>();
 
     public GameBoard getGameBoard() {
         return gameBoard;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     public List<String> getReasons() {
@@ -119,99 +114,6 @@ private List<String> reasons = new ArrayList<>();
         return p.getCharacters().stream().filter(c -> !c.isDead()).collect(Collectors.toList());
     }
 
-    /* public String checkOwnCharacterAble(Player p) {
-        List<CoupCharacter> livingCharacters = getLivingCharacters(p);
-
-        if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
-                livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
-
-            if (livingCharacters.get(0).getName().equals("Contessa")) {
-                errorMessage = "Since Contessa doesn't have an action you can't use it!";
-                return "unable";
-            }
-            else if (livingCharacters.get(0).getName().equals("Assassin") && p.getCoins() < 3) {
-                errorMessage = "Since you have less than 3 coins you can't assassinate!";
-                return "unable";
-            }
-            else if (livingCharacters.get(0).getName().equals("Captain") && getOpponentsWithCoins(p).isEmpty()) {
-                errorMessage = "Since none of your opponents have coins you can't steal!";
-                return "unable";
-            }
-            else if (livingCharacters.get(0).getName().equals("Duke") && gameBoard.getTreasury() < 3) {
-                errorMessage = "Since the treasury has less than 3 coins you can't tax!";
-                return "unable";
-            }
-            else {
-                return "able";
-            }
-        }
-
-        else {
-
-            if (livingCharacters.stream().filter(c -> c.getName().equals("Contessa")).count() == 1) {
-
-                if (livingCharacters.stream().filter(c -> c.getName().equals("Assassin")).count() == 1 &&
-                        p.getCoins() < 3) {
-                    errorMessage = "Since Contessa doesn't have an action and you have less than 3 coins you can't use"
-                            + " any of your characters!";
-                    return "unable";
-                }
-
-                else if(livingCharacters.stream().filter(c -> c.getName().equals("Captain")).count() == 1 &&
-                        getOpponentsWithCoins(p).isEmpty()){
-                    errorMessage = "Since Contessa doesn't have an action and none opponent has coins " +
-                            "you can't use any of your characters!";
-                    return "unable";
-                }
-
-                else if(livingCharacters.stream().filter(c -> c.getName().equals("Duke")).count() == 1 &&
-                        gameBoard.getTreasury() < 3){
-                    errorMessage = "Since Contessa doesn't have an action and the treasury has less than 3 coins " +
-                            "you can't use any of your characters!";
-                    return "unable";
-                }
-
-                else {
-                    return "able";
-                }
-            }
-
-            else if(livingCharacters.stream().filter(c -> c.getName().equals("Duke") || c.getName().equals("Assassin")).
-                    count() == 2){
-
-                if(gameBoard.getTreasury() < 3 && p.getCoins() < 3){
-                    errorMessage = "Since both you and the treasury have less than 3 coins " +
-                            "you can't use any of your characters!";
-
-                    return "unable";
-                }
-
-                else {
-                    return "able";
-                }
-            }
-
-            else if(livingCharacters.stream().filter(c -> c.getName().equals("Captain") ||
-                    c.getName().equals("Assassin")).count() == 2){
-
-                if(p.getCoins() < 3 && getOpponentsWithCoins(p).isEmpty()){
-                    errorMessage = "Since you have less than 3 coins and none opponent has coins " +
-                            "you can't use any of your characters!";
-
-                    return "unable";
-                }
-
-                else {
-                    return "able";
-                }
-            }
-
-            else {
-                return "able";
-            }
-        }
-    } */
-
     public List<Player> getOpponentsWithCoins(Player p) {
         return getActiveOpponents(p).stream().filter(o -> o.getCoins() > 0).collect(Collectors.toList());
     }
@@ -232,43 +134,6 @@ private List<String> reasons = new ArrayList<>();
         System.out.println("Alright " + p.getName() + " your new character is: " +
                 randomCharacters.get(0).getName());      
     }
-
-    /* public String checkBluffAble(Player p) {
-        List<String> otherCharactersNames = getOtherCharacters(p);
-        int availableBluffs = 0;
-        reasons = new ArrayList<>();
-
-        for (String name:otherCharactersNames) {
-
-            if(name.equals("Contessa")){
-                reasons.add("You can't pretend to have Contessa since it doesn't have an action.");
-            }
-
-            else if(name.equals("Duke") && gameBoard.getTreasury() < 3){
-                reasons.add("You can't pretend to have Duke since the treasury has less than 3 coins.");
-            }
-
-            else if(name.equals("Captain") && getOpponentsWithCoins(p).isEmpty()){
-                reasons.add("You can't pretend to have Captain since your opponents are out of coins.");
-            }
-
-            else if(name.equals("Assassin") && p.getCoins() < 3){
-                reasons.add("You can't pretend to have Assassin since you have less than 3 coins.");
-            }
-
-            else {
-                availableBluffs++;
-            }
-        }
-
-        if(availableBluffs > 0){
-            return "able";
-        }
-
-        else {
-            return "unable";
-        }
-    } */
 
     public List<String> getOtherCharacters(Player p) {
         List<String> ownCharacters = getCharacterNames(p);
