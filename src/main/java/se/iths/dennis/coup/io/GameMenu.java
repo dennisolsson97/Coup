@@ -320,19 +320,7 @@ public class GameMenu {
                 System.out.println("Alright, let's verify your statement " + p.getName() + ":");
 
                 if (game.verifyStatement(p, "Assassin").equals("truth")) {
-
-                    if (game.getLivingCharacters(opponent).size() == 1) {
-                        game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
-                    }
-
-                    else {
-                        game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
-                        game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
-                    }
-
-                    opponent.setOut(true);
-                    game.getGameBoard().setTreasury(opponent.getCoins());
-                    opponent.setCoins(-opponent.getCoins());
+                    loseInfluence(opponent, 2);
                     System.out.println("Well, since you actually had Assassin " + p.getName() + ", " +
                             opponent.getName() + " is now out of the game because your Assassinate went through and " +
                             opponent.getName() + " did lose the challenge!");
@@ -355,7 +343,7 @@ public class GameMenu {
                     System.out.println("Well, since you were bluffing " + p.getName()
                             + " you will now lose a character and" + " your Assassinate won't go through!");
                     gameContinue();
-                    loseInfluence(p);
+                    loseInfluence(p, 1);
                 }
             }
 
@@ -377,7 +365,7 @@ public class GameMenu {
                                 " your Assassinate got blocked!");
 
                         gameContinue();
-                        loseInfluence(p);
+                        loseInfluence(p, 1);
 
                         if (game.getRemainingPlayers().size() > 1) {
                             System.out.println("Now hand over the computer to "
@@ -396,19 +384,7 @@ public class GameMenu {
                     }
 
                     else if (game.verifyStatement(opponent, "Contessa").equals("bluff")) {
-
-                        if (game.getLivingCharacters(opponent).size() == 1) {
-                            game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
-                        }
-
-                        else {
-                            game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
-                            game.executeCharacter(opponent, game.getLivingCharacters(opponent).get(0));
-                        }
-
-                        opponent.setOut(true);
-                        game.getGameBoard().setTreasury(opponent.getCoins());
-                        opponent.setCoins(-opponent.getCoins());
+                        loseInfluence(opponent, 2);
                         System.out.println("Well, since " + opponent.getName() + " was bluffing " +
                                 p.getName() + " your Assassinate went through and you won the challenge. " +
                                 "Therefore " + opponent.getName() + " is now out of the game!");
@@ -426,12 +402,11 @@ public class GameMenu {
         else if (answer.equals("No")) {
             System.out.println("Now hand over the computer to "
                     + opponent.getName());
-
             System.out.println("Hello " + opponent.getName() + " you will now" +
                     " lose a character");
 
             gameContinue();
-            loseInfluence(opponent);
+            loseInfluence(opponent,1);
         }
     }
 
@@ -457,7 +432,7 @@ public class GameMenu {
                     System.out.println("Now hand over the computer to " + opponent.getName());
                     System.out.println("Hello " + opponent.getName() + " you will now lose a character!");
                     gameContinue();
-                    loseInfluence(opponent);
+                    loseInfluence(opponent,1);
 
                     if (game.getRemainingPlayers().size() > 1) {
                         System.out.println("Now hand over the computer to "
@@ -476,7 +451,7 @@ public class GameMenu {
                     System.out.println("Well, since you were bluffing " + p.getName()
                             + " you will now lose a character and" + " your Steal won't go through!");
                     gameContinue();
-                    loseInfluence(p);
+                    loseInfluence(p,1);
                 }
             }
 
@@ -503,7 +478,7 @@ public class GameMenu {
                                 " your Steal got blocked!");
 
                         gameContinue();
-                        loseInfluence(p);
+                        loseInfluence(p,1);
 
                         if (game.getRemainingPlayers().size() > 1) {
                             System.out.println("Now hand over the computer to "
@@ -532,7 +507,7 @@ public class GameMenu {
 
                         gameContinue();
 
-                        loseInfluence(opponent);
+                        loseInfluence(opponent,1);
                     }
                 }
 
@@ -621,7 +596,7 @@ public class GameMenu {
                 System.out.println("Now hand over the computer to " + opponent.getName());
                 System.out.println("Hello " + opponent.getName() + " you will now lose a character!");
                 gameContinue();
-                loseInfluence(opponent);
+                loseInfluence(opponent,1);
 
                 if (game.getRemainingPlayers().size() > 1) {
                     System.out.println("Now hand over the computer to "
@@ -641,7 +616,7 @@ public class GameMenu {
                 System.out.println("Well since you were bluffing " + p.getName() + " you will now lose a character and"
                         + " your Exchange won't go through!");
                 gameContinue();
-                loseInfluence(p);
+                loseInfluence(p,1);
             }
         }
 
@@ -681,7 +656,7 @@ public class GameMenu {
                 System.out.println("Now hand over the computer to " + opponent.getName());
                 System.out.println("Hello " + opponent.getName() + " you will now lose a character!");
                 gameContinue();
-                loseInfluence(opponent);
+                loseInfluence(opponent,1);
 
                 if (game.getRemainingPlayers().size() > 1) {
                     makeSpace();
@@ -700,7 +675,7 @@ public class GameMenu {
             else if (game.verifyStatement(p, "Duke").equals("bluff")) {
                 System.out.println("Well since you were bluffing " + p.getName() + " you will now lose a character!");
                 gameContinue();
-                loseInfluence(p);
+                loseInfluence(p,1);
             }
         }
 
@@ -733,7 +708,7 @@ public class GameMenu {
                             " Duke " + p.getName() + " so you will now lose a character and" +
                             " your Foreign Aid got blocked!");
                     gameContinue();
-                    loseInfluence(p);
+                    loseInfluence(p,1);
 
                     if (game.getRemainingPlayers().size() > 1) {
                         System.out.println("Now hand over the computer to "
@@ -756,7 +731,7 @@ public class GameMenu {
                     System.out.println("Hello " + opponent.getName() + " you will now" +
                             " lose a character");
                     gameContinue();
-                    loseInfluence(opponent);
+                    loseInfluence(opponent,1);
                 }
             }
 
@@ -801,7 +776,7 @@ public class GameMenu {
         System.out.println("Hello " + opponent.getName() + " make sure that your opponents/opponent"
                 + " don't look at the screen and then press Enter");
         sc.nextLine();
-        loseInfluence(opponent);
+        loseInfluence(opponent,1);
     }
 
     private void gameContinue() {
@@ -817,20 +792,19 @@ public class GameMenu {
         return selectOpponent(activeOpponents);
     }
 
-    private void loseInfluence(Player p) {
-        List<CoupCharacter> livingCharacters = game.getLivingCharacters(p);
-
-        if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
+    private void loseInfluence(Player p, int executions) {
+        if(executions == 1) {
+            List<CoupCharacter> livingCharacters = game.getLivingCharacters(p);
+            
+            if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
                 livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
             game.executeCharacter(p, livingCharacters.get(0));
         }
+        
+        else selectSacrifice(p, livingCharacters);
+    }
 
-        else {
-            System.out.println("Since you got 2 different characters that are alive you can choose wich one of them " +
-                    "you want to sacrifice.");
-            CoupCharacter selectedCharacter = selectCharacters(1, livingCharacters).get(0);
-            game.executeCharacter(p, selectedCharacter);
-        }
+    else game.executeEveryCharacter(p);
 
         if (game.getLivingCharacters(p).isEmpty()) {
             p.setOut(true);
@@ -840,6 +814,13 @@ public class GameMenu {
                     + " and are now out of the game!");
             gameContinue();
         }
+    }
+
+    private void selectSacrifice(Player p, List<CoupCharacter> livingCharacters) {
+        System.out.println("Since you got 2 different characters that are alive you can choose wich one of them " +
+                "you want to sacrifice.");
+        CoupCharacter selectedCharacter = selectCharacters(1, livingCharacters).get(0);
+        game.executeCharacter(p, selectedCharacter);
     }
 
     private Player selectOpponent(List<Player> selectableOpponents) {
