@@ -38,18 +38,42 @@ public class Viewer {
         }
     }
 
-    public void viewInformation(Player p) {
+    public void viewInformation(Player p, List<String> availableCharacters, List<String> availableBluffs) {
         System.out.println("======================== Opponents ========================================");
         viewOpponents(game.getAllOpponents(p));
         System.out.println("======================== Game Board =======================================");
         viewGameBoard();
         System.out.println("======================== Your Resources ===================================");
         viewResources(p);
+        System.out.println("======================== Possible Statements ===============================");
+        viewAvailableCharacters(availableCharacters);
+        viewAvailableBluffs(availableBluffs);
+        System.out.println("=================== Main Menu ==============================================");
         viewOptions();
     }
 
+    private void viewAvailableBluffs(List<String> availableBluffs) {
+        if(availableBluffs.isEmpty()) System.out.println("You can't bluff at the moment");
+
+        else {
+            System.out.println("You can pretend to have:");
+            availableBluffs.forEach(System.out::println);
+        }
+    }
+
+    private void viewAvailableCharacters(List<String> availableCharacters) {
+        if(availableCharacters.isEmpty()) System.out.println("You can't use an own character at the moment");
+        
+        else if(availableCharacters.size() == 1 || availableCharacters.size() == 2 && 
+        availableCharacters.get(0).equals(availableCharacters.get(1))) {
+            System.out.println("Of your own characters you can use: " + availableCharacters.get(0));
+        }
+
+        else System.out.println("Of your own characters you can use: " + availableCharacters.get(0) + ", " +
+        availableCharacters.get(1));
+    }
+
     private void viewOptions() {
-        System.out.println("=================== Main Menu =============================================");
         System.out.println("1.Income");
         System.out.println("2.Foreign Aid");
         System.out.println("3.Coup");
