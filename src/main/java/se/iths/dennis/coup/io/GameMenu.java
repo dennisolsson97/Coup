@@ -118,7 +118,7 @@ public class GameMenu {
 
     private void startTurn(Player p) {
         System.out.println("It's the turn of " + p.getName() + ", make sure the right person has the " +
-                "computer and the press Enter!");
+                "computer and then press Enter!");
         sc.nextLine();
         makeSpace();
 
@@ -161,12 +161,14 @@ public class GameMenu {
 
                 game.resetPlayers();
                 decideGameType();
+                playGame();
             }
 
             else if (answer.equals("No")) {
                 game.setAllPlayers(new ArrayList<>());
                 preparer.createNewPlayers();
                 decideGameType();
+                playGame();
             }
         }
 
@@ -179,7 +181,9 @@ public class GameMenu {
         boolean loop = true;
 
         while (loop) {
-            viewer.viewInformation(p);
+            List<String> availableCharacters = game.getAvailableStatements(p, game.getCharacterNames(p));
+            List<String> availableBluffs = game.getAvailableStatements(p, game.getOtherCharacters(p));
+            viewer.viewInformation(p, availableCharacters, availableBluffs);
             System.out.println("It's your turn " + p.getName() + ", choose one of the above options!");
             System.out.print("choice:");
             int choice = sc.nextInt();
@@ -208,44 +212,17 @@ public class GameMenu {
                     break;
 
                 case 4:
-                    List<String> availableCharacters = game.getAvailableStatements(p, game.getCharacterNames(p));
-
                     if (isOwnCharacterAvailable(availableCharacters)) {
-                        //useOwnCharacterMenu(p);
                         useCharacter(p, getStatement(availableCharacters));
                         loop = false;
                     }
-
-                    /* else if (game.checkOwnCharacterAble(p).equals("unable")) {
-                        System.out.println(game.getErrorMessage());
-                        System.out.println();
-                        System.out.println("You need to either bluff or do an action which is not " +
-                                "bound to a specific character");
-                        gameContinue();
-                        makeSpace();
-                    } */
-
                     break;
 
-                case 5:
-                    List<String> availableBluffs = game.getAvailableStatements(p, game.getOtherCharacters(p));
-                
+                case 5:                
                     if (isBluffAvailable(availableBluffs)) {
-                        //bluffMenu(p);
                         useCharacter(p, getStatement(availableBluffs));
                         loop = false;
                     }
-
-                    /* else if (game.checkBluffAble(p).equals("unable")) {
-                        System.out.println("You can't bluff because:");
-                        game.getReasons().forEach(System.out::println);
-                        System.out.println();
-                        System.out.println("You need to either use your own character or do an action " +
-                                "which is not bound to a specific character.");
-                        gameContinue();
-                        makeSpace();
-                    } */
-
                     break;
 
                 default:
@@ -287,7 +264,7 @@ public class GameMenu {
 
     private boolean isOwnCharacterAvailable(List<String> ownCharacters) {
         if(ownCharacters.size() > 0) return true;
-        System.out.println("You can't use your own character(s) at the moment.");
+        System.out.println("You can't use an own character at the moment.");
         gameContinue();
         makeSpace();
         return false;
@@ -303,8 +280,7 @@ public class GameMenu {
 
     private boolean isForeignAidAvailable() {
         if(game.getGameBoard().getTreasury() >= 2) return true;
-        System.out.println("The treasury has less than 2 coins so you can't do " +
-                                "Foreign Aid!");
+        System.out.println("The treasury has less than 2 coins so you can't do Foreign Aid!");
         gameContinue();
         makeSpace();
         return false;
@@ -317,57 +293,6 @@ public class GameMenu {
         makeSpace();
         return false;
     }
-
-    /* private void useOwnCharacterMenu(Player p) {
-        List<CoupCharacter> livingCharacters = game.getLivingCharacters(p);
-
-        if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
-                livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
-
-            useCharacter(p, livingCharacters.get(0).getName());
-        }
-
-        else {
-            List<CoupCharacter> availableCharacters = new ArrayList<>();
-
-            for (CoupCharacter c : livingCharacters) {
-                if (c.getName().equals("Contessa")) {
-                    System.out.println("Since Contessa doesn't have an action you can't use it!");
-                }
-
-                else if (c.getName().equals("Assassin") && p.getCoins() < 3) {
-                    System.out.println("Since you have less than 3 coins you can't use Assassin!");
-                }
-
-                else if (c.getName().equals("Captain") &&
-                        game.getOpponentsWithCoins(p).isEmpty()) {
-                    System.out.println("Since your opponent/opponents are out of coins you can't use Captain!");
-                }
-
-                else if (c.getName().equals("Duke") && game.getGameBoard().getTreasury() < 3) {
-                    System.out.println("Since the treasury has less than 3 coins you can't use Duke!");
-                }
-
-                else {
-                    availableCharacters.add(c);
-                }
-            }
-
-            if (availableCharacters.size() == 1) {
-                System.out.println("You will use " + availableCharacters.get(0).getName() + " instead!");
-                gameContinue();
-                makeSpace();
-                useCharacter(p, availableCharacters.get(0).getName());
-            }
-
-            else {
-                System.out.println("Since both your characters are available you can choose which one of them " +
-                        "you want to use.");
-                List<CoupCharacter> selectedCharacters = selectCharacters(1, availableCharacters);
-                useCharacter(p, selectedCharacters.get(0).getName());
-            }
-        }
-    } */
 
     private void useCharacter(Player p, String statement) {
         if (statement.equals("Duke")) dukeMenu(p);
