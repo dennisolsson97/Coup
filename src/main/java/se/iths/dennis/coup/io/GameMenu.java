@@ -213,14 +213,16 @@ public class GameMenu {
 
                 case 4:
                     if (isOwnCharacterAvailable(availableCharacters)) {
-                        //useCharacter(p, getStatement(availableCharacters));
+                        makeSpace();
+                        useCharacter(p, getStatement(availableCharacters));
                         loop = false;
                     }
                     break;
 
                 case 5:                
                     if (isBluffAvailable(availableBluffs)) {
-                        //useCharacter(p, getStatement(availableBluffs));
+                        makeSpace();
+                        useCharacter(p, getStatement(availableBluffs));
                         loop = false;
                     }
                     break;
@@ -295,7 +297,7 @@ public class GameMenu {
     }
 
     private void useCharacter(Player p, String statement) {
-        //if (statement.equals("Duke")) dukeMenu(p);
+        if (statement.equals("Duke")) claimDuke(p);
         
         //else if (statement.equals("Assassin")) assassinMenu(p);
         
@@ -594,51 +596,27 @@ public class GameMenu {
         selectedCharacters.forEach(c -> game.getGameBoard().getCourtDeck().add(c));
     }
 
-    /* private void dukeMenu(Player p) {
+    private void claimDuke(Player p) {
         System.out.println("Now tell your opponents/opponent that you claim Duke and want to make Tax!");
         System.out.println("Does any opponent challenge your statement? Please be honest, no cheating!");
-        String answer = answerQuestion();
+        boolean isChallenging = answerQuestion();
 
-        if (answer.equals("Yes")) {
-            System.out.println("Alright, let's verify your statement " + p.getName() + ":");
+        if (isChallenging) challengeDuke(p);
+        else p.setCoins(game.tax());
+    }
 
-            if (game.verifyStatement(p, "Duke").equals("truth")) {
-                System.out.println("Well, since you actually had Duke " + p.getName() + " the opponent who " +
-                        "challenged you will now lose a character and your Tax will go through!");
-                p.setCoins(game.tax());
-                Player opponent = getActiveOpponent(p);
-                System.out.println("Now hand over the computer to " + opponent.getName());
-                System.out.println("Hello " + opponent.getName() + " you will now lose a character!");
-                gameContinue();
-                loseInfluence(opponent,1);
-
-                if (game.getRemainingPlayers().size() > 1) {
-                    makeSpace();
-                    System.out.println("Now hand over the computer to "
-                            + p.getName());
-                    System.out.println("Alright " + p.getName() + " you will" +
-                            " now hand in your Duke and get a new random character from" +
-                            " the Court deck.");
-                    gameContinue();
-                    game.getNewCharacter(p, "Duke");
-                    gameContinue();
-                    makeSpace();
-                }
-            }
-
-            else if (game.verifyStatement(p, "Duke").equals("bluff")) {
-                System.out.println("Well since you were bluffing " + p.getName() + " you will now lose a character!");
-                gameContinue();
-                loseInfluence(p,1);
-            }
-        }
-
-        else if (answer.equals("No")) {
-            p.setCoins(game.tax());
-            System.out.println("Your Tax went through " + p.getName());
+    private void challengeDuke(Player challengedPlayer) {
+        if(game.verifyStatement(challengedPlayer, "Duke")) {
+            System.out.println("Let's identify the opponent who challenged you:");
+            Player challenger = getActiveOpponent(challengedPlayer);
             gameContinue();
+            Player winner = resolveChallenge(challengedPlayer, challenger, "Duke");
+
+        if(winner.equals(challengedPlayer) && game.getRemainingPlayers().size() > 1) challengedPlayer.setCoins(game.tax());
         }
-    } */
+
+        else exposeBluff(challengedPlayer);
+    }
 
     private void attemptForeignAid(Player p) {
         System.out.println("Now tell your opponents/opponent that you want to make Foreign Aid!");
@@ -684,13 +662,15 @@ public class GameMenu {
             }
         }
 
-        else {
-            System.out.println("Well since you were bluffing " + challengedPlayer.getName() + 
-            ", you will now lose a character");
-            gameContinue();
-            loseInfluence(challengedPlayer,1);
-        }
+        else exposeBluff(challengedPlayer);
         return winner;
+    }
+
+    private void exposeBluff(Player challengedPlayer) {
+        System.out.println("Well since you were bluffing " + challengedPlayer.getName() + 
+        ", you will now lose a character");
+        gameContinue();
+        loseInfluence(challengedPlayer,1);
     }
 
     private void switchCharacters(Player challengedPlayer, String statement) {
