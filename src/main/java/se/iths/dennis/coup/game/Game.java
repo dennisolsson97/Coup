@@ -100,14 +100,9 @@ private List<String> reasons = new ArrayList<>();
         getLivingCharacters(p).stream().filter(c -> c.equals(characterToExecute)).forEach(c -> c.setDead(true));
     }
 
-    public String verifyStatement(Player p, String statement) {
+    public boolean verifyStatement(Player p, String statement) {
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
-
-        if(livingCharacters.stream().filter(c -> c.getName().equals(statement)).count() > 0){
-            return "truth";
-        }
-
-        return "bluff";
+        return livingCharacters.stream().filter(c -> c.getName().equals(statement)).count() > 0;
     }
 
     public List<CoupCharacter> getLivingCharacters(Player p) {
@@ -247,5 +242,10 @@ private List<String> reasons = new ArrayList<>();
 
     public void executeEveryCharacter(Player p) {
         getLivingCharacters(p).forEach(c -> c.setDead(true));
+    }
+
+    public Player challenge(Player challenger, Player challengedPlayer, String statement) {
+        if(verifyStatement(challengedPlayer, statement)) return challengedPlayer;
+        else return challenger;
     }
 }
