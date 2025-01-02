@@ -18,5 +18,4 @@ public class CoupApplication {
         System.out.println("Welcome to a new round of Coup! How many will play? You can be 2-6 players");
         gameMenu.doPreparations();
     }
-
 }

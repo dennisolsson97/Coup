@@ -125,9 +125,7 @@ private List<String> reasons = new ArrayList<>();
         }
 
         List<CoupCharacter> randomCharacters = getRandomCharacters(1);
-        p.getCharacters().add(randomCharacters.get(0));
-        System.out.println("Alright " + p.getName() + " your new character is: " +
-                randomCharacters.get(0).getName());      
+        p.getCharacters().add(randomCharacters.get(0));      
     }
 
     public List<String> getOtherCharacters(Player p) {
@@ -163,15 +161,15 @@ private List<String> reasons = new ArrayList<>();
         return allPlayers.stream().filter(p -> !p.isOut()).collect(Collectors.toList());
     }
 
-    public void steal(Player p, Player opponent) {
-        if(opponent.getCoins() == 1){
-            p.setCoins(1);
-            opponent.setCoins(-1);
+    public void steal(Player stealer, Player victim) {
+        if(victim.getCoins() == 1){
+            stealer.setCoins(1);
+            victim.setCoins(-1);
         }
 
         else {
-            p.setCoins(2);
-            opponent.setCoins(-2);
+            stealer.setCoins(2);
+            victim.setCoins(-2);
         }
     }
 
@@ -229,9 +227,7 @@ private List<String> reasons = new ArrayList<>();
     public int getNextPlayer(int i) {
         while (allPlayers.get(i).isOut()) {
             i++;
-            if (i == allPlayers.size()) {
-                i = 0;
-            }
+            if (i == allPlayers.size()) i = 0;           
         }
         return i;
     }
@@ -247,5 +243,9 @@ private List<String> reasons = new ArrayList<>();
     public Player challenge(Player challenger, Player challengedPlayer, String statement) {
         if(verifyStatement(challengedPlayer, statement)) return challengedPlayer;
         else return challenger;
+    }
+
+    public boolean isStealNecessary(Player p) {
+        return getRemainingPlayers().size() != 2 || getLivingCharacters(p).size() != 1;
     }
 }

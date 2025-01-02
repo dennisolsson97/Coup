@@ -62,7 +62,7 @@ public class Viewer {
     }
 
     private void viewAvailableCharacters(List<String> availableCharacters) {
-        if(availableCharacters.isEmpty()) System.out.println("You can't use an own character at the moment");
+        if(availableCharacters.isEmpty()) System.out.println("You can't use an own character for this turn");
         
         else if(availableCharacters.size() == 1 || availableCharacters.size() == 2 && 
         availableCharacters.get(0).equals(availableCharacters.get(1))) {
