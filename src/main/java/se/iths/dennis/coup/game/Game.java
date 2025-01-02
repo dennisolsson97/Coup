@@ -240,11 +240,6 @@ private List<String> reasons = new ArrayList<>();
         getLivingCharacters(p).forEach(c -> c.setDead(true));
     }
 
-    public Player challenge(Player challenger, Player challengedPlayer, String statement) {
-        if(verifyStatement(challengedPlayer, statement)) return challengedPlayer;
-        else return challenger;
-    }
-
     public boolean isStealNecessary(Player p) {
         return getRemainingPlayers().size() != 2 || getLivingCharacters(p).size() != 1;
     }

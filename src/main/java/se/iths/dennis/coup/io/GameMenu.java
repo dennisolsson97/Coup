@@ -496,10 +496,9 @@ public class GameMenu {
         if(game.verifyStatement(challengedPlayer, "Ambassador")) {
             System.out.println("Let's identify the opponent who challenged you:");
             Player challenger = getActiveOpponent(challengedPlayer);
-            gameContinue();
-            Player winner = resolveChallenge(challengedPlayer, challenger, "Ambassador");
-
-        if(winner.equals(challengedPlayer) && game.getRemainingPlayers().size() > 1) exchange(challengedPlayer);
+            makeSpace();
+            exposeTrueStatement(challengedPlayer, challenger,  "Ambassador");
+            if(game.getRemainingPlayers().size() > 1) exchange(challengedPlayer);
         }
 
         else exposeBluff(challengedPlayer);
@@ -533,10 +532,9 @@ public class GameMenu {
         if(game.verifyStatement(challengedPlayer, "Duke")) {
             System.out.println("Let's identify the opponent who challenged you:");
             Player challenger = getActiveOpponent(challengedPlayer);
-            gameContinue();
-            Player winner = resolveChallenge(challengedPlayer, challenger, "Duke");
-
-        if(winner.equals(challengedPlayer) && game.getRemainingPlayers().size() > 1) challengedPlayer.setCoins(game.tax());
+            makeSpace();
+            exposeTrueStatement(challengedPlayer, challenger, "Duke");
+            if(game.getRemainingPlayers().size() > 1) challengedPlayer.setCoins(game.tax());
         }
 
         else exposeBluff(challengedPlayer);
@@ -559,22 +557,19 @@ public class GameMenu {
             System.out.println("Let's see wich opponent claimed Duke:");
             Player challengedPlayer = getActiveOpponent(p);
             handOverComputer(p, challengedPlayer);
-            System.out.println("Let's identify the opponent who challenged you:");
-            Player challenger = getActiveOpponent(challengedPlayer);
-            System.out.println("Let's verify your statement " + challengedPlayer.getName());
-            gameContinue();
-            Player winner = resolveChallenge(challengedPlayer, challenger, "Duke");
-
-            if(winner.equals(challenger) && game.getRemainingPlayers().size() > 1) p.setCoins(game.foreignAid());
+            
+            if(game.verifyStatement(challengedPlayer, "Duke")){
+                System.out.println("Let's identify the opponent who challenged you:");
+                Player challenger = getActiveOpponent(challengedPlayer);
+                makeSpace();
+                exposeTrueStatement(challengedPlayer, challenger, "Duke");
+            }
+            
+            else {
+                exposeBluff(challengedPlayer);
+                if(game.getRemainingPlayers().size() > 1) p.setCoins(game.foreignAid());
+            }
         }
-    }
-
-    private Player resolveChallenge(Player challengedPlayer, Player challenger, String statement) {
-        Player winner = game.challenge(challenger, challengedPlayer, statement);
-
-        if (winner.equals(challengedPlayer)) exposeTrueStatement(challengedPlayer, challenger, statement);
-        else exposeBluff(challengedPlayer);
-        return winner;
     }
 
     private void exposeTrueStatement(Player challengedPlayer, Player challenger, String statement) {
@@ -585,7 +580,7 @@ public class GameMenu {
         loseInfluence(challenger, 1);
         makeSpace();
 
-        if (game.getRemainingPlayers().size() > 1) {
+        if(game.getRemainingPlayers().size() > 1) {
             handOverComputer(challenger, challengedPlayer);
             switchCharacters(challengedPlayer, statement);
         }
@@ -675,7 +670,7 @@ public class GameMenu {
 
     else game.executeEveryCharacter(p);
 
-        if (game.getLivingCharacters(p).isEmpty()) {
+        if(game.getLivingCharacters(p).isEmpty()) {
             p.setOut(true);
             game.getGameBoard().setTreasury(p.getCoins());
             p.setCoins(-p.getCoins());
