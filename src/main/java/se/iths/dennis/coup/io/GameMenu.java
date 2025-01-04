@@ -27,13 +27,10 @@ public class GameMenu {
     }
 
     private void decideGameType() {
-        if (game.getAllPlayers().size() == 2) {
-            prepare2PlayersGame();
-        }
+        if (game.getAllPlayers().size() == 2) prepare2PlayersGame();
 
-        else {
-            preparer.prepareNormalGame();
-        }
+        else preparer.prepareNormalGame();
+        
         viewer.viewCharacters();
     }
 
@@ -298,121 +295,76 @@ public class GameMenu {
     }
 
     private void useCharacter(Player p, String statement) {
-        if (statement.equals("Duke")) claimDuke(p);
+        if(statement.equals("Duke")) claimDuke(p);
         
-        //else if (statement.equals("Assassin")) assassinMenu(p);
+        else if(statement.equals("Assassin")) claimAssassin(p);
         
-        else if (statement.equals("Ambassador")) claimAmbassador(p);
+        else if(statement.equals("Ambassador")) claimAmbassador(p);
         
-        else if (statement.equals("Captain")) claimCaptain(p);
+        else if(statement.equals("Captain")) claimCaptain(p);
     }
 
-    /* private void assassinMenu(Player p) {
+    private void claimAssassin(Player p) {
         p.setCoins(game.assassinate());
         Player opponent = getActiveOpponent(p);
         System.out.println("Now claim Assassin and that you want to Assassinate " + opponent.getName());
-        System.out.println("Does " + opponent.getName() +
-                " challenge your statement/claims Contessa to counteract? " +
-                "Please be honest, no cheating!");
-        String answer = answerQuestion();
+        System.out.println("Does anyone challenge your statement? Please be honest, no cheating!");
+        boolean isChallenging = answerQuestion();
 
-        if (answer.equals("Yes")) {
-            answer = challengeOrCounteraction();
+        if(isChallenging) challengeAssassin(p, opponent);
+        else askForContessa(p, opponent);    
+    }
 
-            if (answer.equals("Challenge")) {
-                System.out.println("Alright, let's verify your statement " + p.getName() + ":");
-
-                if (game.verifyStatement(p, "Assassin").equals("truth")) {
-                    loseInfluence(opponent, 2);
-                    System.out.println("Well, since you actually had Assassin " + p.getName() + ", " +
-                            opponent.getName() + " is now out of the game because your Assassinate went through and " +
-                            opponent.getName() + " did lose the challenge!");
-                    gameContinue();
-
-                    if (game.getRemainingPlayers().size() > 1) {
-
-                        System.out.println("Alright " + p.getName() + " you will" +
-                                " now hand in your Assassin and get a new random character from" +
-                                " the Court deck.");
-
-                        gameContinue();
-                        game.getNewCharacter(p, "Assassin");
-                        gameContinue();
-                        makeSpace();
-                    }
-                }
-
-                else if (game.verifyStatement(p, "Assassin").equals("bluff")) {
-                    System.out.println("Well, since you were bluffing " + p.getName()
-                            + " you will now lose a character and" + " your Assassinate won't go through!");
-                    gameContinue();
-                    loseInfluence(p, 1);
-                }
+    private void challengeAssassin(Player p, Player opponent) {
+        if(game.verifyStatement(p, "Assassin")) {
+            System.out.println("Let's identify the opponent who challenged you:");
+            Player challenger = getActiveOpponent(p);
+            makeSpace();
+            
+            if(challenger.equals(opponent)) {
+                handOverComputer(p, challenger);
+                loseInfluence(challenger, 2);
             }
-
-            else if (answer.equals("Counteraction")) {
-                System.out.println("Alright " + p.getName() + " do you want to challenge the statement of " +
-                        opponent.getName() + "? If you don't your Assassinate won't go through " +
-                        "but if you do you might lose a character. Choose wisely!");
-
-                answer = answerQuestion();
-
-                if (answer.equals("Yes")) {
-
-                    System.out.println("Alright, let's verify the statement of "
-                            + opponent.getName() + ":");
-
-                    if (game.verifyStatement(opponent, "Contessa").equals("truth")) {
-                        System.out.println("Well, " + opponent.getName() + " actually had Contessa " + p.getName() +
-                                " so you will now lose a character and" +
-                                " your Assassinate got blocked!");
-
-                        gameContinue();
-                        loseInfluence(p, 1);
-
-                        if (game.getRemainingPlayers().size() > 1) {
-                            System.out.println("Now hand over the computer to "
-                                    + opponent.getName());
-
-                            System.out.println("Alright " + opponent.getName() + " you will" +
-                                    " now hand in your Contessa " + "and get a new random character from" +
-                                    " the Court deck.");
-
-                            gameContinue();
-                            game.getNewCharacter(opponent, "Contessa");
-                            gameContinue();
-                            makeSpace();
-                        }
-
-                    }
-
-                    else if (game.verifyStatement(opponent, "Contessa").equals("bluff")) {
-                        loseInfluence(opponent, 2);
-                        System.out.println("Well, since " + opponent.getName() + " was bluffing " +
-                                p.getName() + " your Assassinate went through and you won the challenge. " +
-                                "Therefore " + opponent.getName() + " is now out of the game!");
-                        gameContinue();
-                    }
-                }
-
-                else if (answer.equals("No")) {
-                    System.out.println("Your Assassinate didn't go through " + p.getName());
-                    gameContinue();
-                }
+   
+            else {
+                exposeTrueStatement(p, challenger, "Assassin");
+                askForContessa(p, opponent);
             }
         }
-
-        else if (answer.equals("No")) {
-            System.out.println("Now hand over the computer to "
-                    + opponent.getName());
-            System.out.println("Hello " + opponent.getName() + " you will now" +
-                    " lose a character");
-
-            gameContinue();
-            loseInfluence(opponent,1);
+        
+        else exposeBluff(p);
+    }
+                
+    private void askForContessa(Player p, Player opponent) {
+        System.out.println("Does " + opponent.getName() + " claim Contessa to block the assassinate?");
+        boolean isClaimingContessa = answerQuestion();
+        if(isClaimingContessa) attemptAssassinateBlock(p, opponent);
+        else {
+            handOverComputer(p, opponent);
+            loseInfluence(opponent, 1);
         }
-    } */
+    }
+                        
+    private void attemptAssassinateBlock(Player p, Player opponent) {
+        System.out.println("Does anyone challenge the statement of " + opponent.getName() + "?");
+        boolean isChallenging = answerQuestion();
+        if(isChallenging) challengeContessa(p, opponent);     
+    }
 
+    private void challengeContessa(Player p, Player opponent) {
+        makeSpace();
+        handOverComputer(p, opponent);
+        
+        if(game.verifyStatement(opponent, "Contessa")) {
+        System.out.println("Let's identify the opponent who challenged you:");
+        Player challenger = getActiveOpponent(opponent);
+        gameContinue();
+        exposeTrueStatement(opponent, challenger, "Contessa");
+        }
+
+        else loseInfluence(opponent, 2);
+    } 
+        
     private void claimCaptain(Player p) {
         Player opponent = getOpponentWithCoins(p);
         System.out.println("Now claim Captain and that you want to steal from " + opponent.getName());
@@ -636,10 +588,7 @@ public class GameMenu {
     private void launchCoup(Player p) {
         p.setCoins(game.coup());
         Player opponent = getActiveOpponent(p);
-        System.out.println("Now " + p.getName() + " you can hand over the computer to " + opponent.getName());
-        System.out.println("Hello " + opponent.getName() + " make sure that your opponents/opponent"
-                + " don't look at the screen and then press Enter");
-        sc.nextLine();
+        handOverComputer(p, opponent);
         loseInfluence(opponent,1);
     }
 
@@ -669,8 +618,8 @@ public class GameMenu {
     }
 
     else game.executeEveryCharacter(p);
-
-        if(game.getLivingCharacters(p).isEmpty()) {
+    
+    if(game.getLivingCharacters(p).isEmpty()) {
             p.setOut(true);
             game.getGameBoard().setTreasury(p.getCoins());
             p.setCoins(-p.getCoins());
