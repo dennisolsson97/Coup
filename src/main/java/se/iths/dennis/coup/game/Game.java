@@ -232,7 +232,7 @@ private List<String> reasons = new ArrayList<>();
     }
 
     public List<String> getCharacterNames(Player p) {
-        return getLivingCharacters(p).stream().map(c -> c.getName()).collect(Collectors.toList());
+        return getLivingCharacters(p).stream().map(c -> c.getName()).distinct().collect(Collectors.toList());
     }
 
     public void executeEveryCharacter(Player p) {
