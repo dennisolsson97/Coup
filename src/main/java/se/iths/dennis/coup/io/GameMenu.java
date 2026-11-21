@@ -188,7 +188,7 @@ public class GameMenu {
             switch (choice) {
                 case 1:
                     if(isIncomeAvailable()) {
-                        p.setCoins(game.income());
+                        game.income(p);
                         loop = false;
                     } 
                     break;
@@ -305,7 +305,7 @@ public class GameMenu {
     }
 
     private void claimAssassin(Player p) {
-        p.setCoins(game.assassinate());
+        game.assassinate(p);
         Player opponent = getActiveOpponent(p);
         System.out.println("Now claim Assassin and that you want to Assassinate " + opponent.getName());
         System.out.println("Does anyone challenge your statement? Please be honest, no cheating!");
@@ -477,7 +477,7 @@ public class GameMenu {
         boolean isChallenging = answerQuestion();
 
         if(isChallenging) challengeDuke(p);
-        else p.setCoins(game.tax());
+        else game.tax(p);
     }
 
     private void challengeDuke(Player challengedPlayer) {
@@ -486,7 +486,7 @@ public class GameMenu {
             Player challenger = getActiveOpponent(challengedPlayer);
             makeSpace();
             exposeTrueStatement(challengedPlayer, challenger, "Duke");
-            if(game.getRemainingPlayers().size() > 1) challengedPlayer.setCoins(game.tax());
+            if(game.getRemainingPlayers().size() > 1) game.tax(challengedPlayer);
         }
 
         else exposeBluff(challengedPlayer);
@@ -498,7 +498,7 @@ public class GameMenu {
         boolean isClaimingDuke = answerQuestion();
         
         if(isClaimingDuke) attemptForeignAidBlock(p);
-        else p.setCoins(game.foreignAid());     
+        else game.foreignAid(p);     
     }
 
     private void attemptForeignAidBlock(Player p) {
@@ -519,7 +519,7 @@ public class GameMenu {
             
             else {
                 exposeBluff(challengedPlayer);
-                if(game.getRemainingPlayers().size() > 1) p.setCoins(game.foreignAid());
+                if(game.getRemainingPlayers().size() > 1) game.foreignAid(p);
             }
         }
     }
@@ -586,7 +586,7 @@ public class GameMenu {
     }
 
     private void launchCoup(Player p) {
-        p.setCoins(game.coup());
+        game.coup(p);
         Player opponent = getActiveOpponent(p);
         handOverComputer(p, opponent);
         loseInfluence(opponent,1);

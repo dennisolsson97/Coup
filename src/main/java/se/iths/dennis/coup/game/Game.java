@@ -50,29 +50,29 @@ private List<String> reasons = new ArrayList<>();
         gameBoard.setCourtDeck(characters);
     }
 
-    public Integer income(){
+    public void income(Player p){
+        p.setCoins(1);
         gameBoard.setTreasury(-1);
-        return 1;
     }
 
-    public Integer foreignAid(){
+    public void foreignAid(Player p){
+        p.setCoins(2);
         gameBoard.setTreasury(-2);
-        return 2;
     }
 
-    public Integer coup(){
+    public void coup(Player p){
+        p.setCoins(-7);
         gameBoard.setTreasury(7);
-        return -7;
     }
 
-    public Integer tax(){
+    public void tax(Player p){
+        p.setCoins(3);
         gameBoard.setTreasury(-3);
-        return 3;
     }
 
-    public Integer assassinate(){
+    public void assassinate(Player p){
+        p.setCoins(-3);
         gameBoard.setTreasury(3);
-        return -3;
     }
 
     public List<CoupCharacter> getRandomCharacters(Integer numberOfRandomCharacters) {
