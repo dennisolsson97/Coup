@@ -68,6 +68,10 @@ public class Game {
         gameBoard.setTreasury(-2);
     }
 
+    public boolean isCoupMandatory(Player p) {
+        return p.getCoins() >= 10;
+    }
+
     public boolean isCoupAvailable(Player p) {
         return p.getCoins() >= 7;
     }

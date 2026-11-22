@@ -123,7 +123,7 @@ public class GameMenu {
         sc.nextLine();
         makeSpace();
 
-        if (p.getCoins() >= 10) {
+        if (game.isCoupMandatory(p)) {
             System.out.println("Alright " + p.getName() + " since you have "
                     + p.getCoins() + " coins you " +
                     "have to launch a coup!");
