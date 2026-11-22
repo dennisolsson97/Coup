@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 @Service
 public class Game {
 
-private GameBoard gameBoard;
-private List<Player> allPlayers = new ArrayList<>();
-private List<String> characterNames = new ArrayList<>();
-private List<String> reasons = new ArrayList<>();
+    private GameBoard gameBoard;
+    private List<Player> allPlayers = new ArrayList<>();
+    private List<String> characterNames = new ArrayList<>();
+    private List<String> reasons = new ArrayList<>();
 
     public List<Player> getAllPlayers() {
         return allPlayers;
@@ -40,8 +40,8 @@ private List<String> reasons = new ArrayList<>();
         while (characters.size() < 15) {
             int randomIndex = ThreadLocalRandom.current().nextInt(characterNames.size());
             String randomName = characterNames.get(randomIndex);
-            
-            if(characters.stream().filter(c -> c.getName().equals(randomName)).count() < 3){
+
+            if (characters.stream().filter(c -> c.getName().equals(randomName)).count() < 3) {
                 number++;
                 characters.add(new CoupCharacter(number, randomName));
             }
@@ -50,27 +50,39 @@ private List<String> reasons = new ArrayList<>();
         gameBoard.setCourtDeck(characters);
     }
 
-    public void income(Player p){
+    public boolean isIncomeAvailable() {
+        return gameBoard.getTreasury() > 0;
+    }
+
+    public void income(Player p) {
         p.setCoins(1);
         gameBoard.setTreasury(-1);
     }
 
-    public void foreignAid(Player p){
+    public boolean isForeignAidAvailable() {
+        return gameBoard.getTreasury() >= 2;
+    }
+
+    public void foreignAid(Player p) {
         p.setCoins(2);
         gameBoard.setTreasury(-2);
     }
 
-    public void coup(Player p){
+    public boolean isCoupAvailable(Player p) {
+        return p.getCoins() >= 7;
+    }
+
+    public void coup(Player p) {
         p.setCoins(-7);
         gameBoard.setTreasury(7);
     }
 
-    public void tax(Player p){
+    public void tax(Player p) {
         p.setCoins(3);
         gameBoard.setTreasury(-3);
     }
 
-    public void assassinate(Player p){
+    public void assassinate(Player p) {
         p.setCoins(-3);
         gameBoard.setTreasury(3);
     }
@@ -116,7 +128,7 @@ private List<String> reasons = new ArrayList<>();
         List<CoupCharacter> livingCharacters = getLivingCharacters(p);
 
         for (int i = 0; i < livingCharacters.size(); i++) {
-            if(livingCharacters.get(i).getName().equals(characterName)){
+            if (livingCharacters.get(i).getName().equals(characterName)) {
                 gameBoard.getCourtDeck().add(livingCharacters.get(i));
                 p.getCharacters().remove(livingCharacters.get(i));
                 break;
@@ -124,7 +136,7 @@ private List<String> reasons = new ArrayList<>();
         }
 
         List<CoupCharacter> randomCharacters = getRandomCharacters(1);
-        p.getCharacters().add(randomCharacters.get(0));      
+        p.getCharacters().add(randomCharacters.get(0));
     }
 
     public List<String> getOtherCharacters(Player p) {
@@ -135,20 +147,20 @@ private List<String> reasons = new ArrayList<>();
     public List<String> getAvailableStatements(Player p, List<String> characterNames) {
         List<String> availableStatements = new ArrayList<>();
 
-        for (String name:characterNames) {
-            if(name.equals("Ambassador")){
+        for (String name : characterNames) {
+            if (name.equals("Ambassador")) {
                 availableStatements.add(name);
             }
 
-            else if(name.equals("Duke") && gameBoard.getTreasury() >= 3){
+            else if (name.equals("Duke") && gameBoard.getTreasury() >= 3) {
                 availableStatements.add(name);
             }
 
-            else if(name.equals("Captain") && getOpponentsWithCoins(p).size() > 0){
+            else if (name.equals("Captain") && getOpponentsWithCoins(p).size() > 0) {
                 availableStatements.add(name);
             }
 
-            else if(name.equals("Assassin") && p.getCoins() >= 3){
+            else if (name.equals("Assassin") && p.getCoins() >= 3) {
                 availableStatements.add(name);
             }
         }
@@ -161,7 +173,7 @@ private List<String> reasons = new ArrayList<>();
     }
 
     public void steal(Player stealer, Player victim) {
-        if(victim.getCoins() == 1){
+        if (victim.getCoins() == 1) {
             stealer.setCoins(1);
             victim.setCoins(-1);
         }
@@ -184,12 +196,12 @@ private List<String> reasons = new ArrayList<>();
 
             } while (!allPlayers.get(i).isLatestWinner());
 
-            while (i < allPlayers.size()){
+            while (i < allPlayers.size()) {
                 newPlayerOrder.add(allPlayers.get(i));
                 i++;
             }
 
-            for (Player p:playersBeforeWinner) {
+            for (Player p : playersBeforeWinner) {
                 newPlayerOrder.add(p);
             }
         }
@@ -198,13 +210,13 @@ private List<String> reasons = new ArrayList<>();
     }
 
     public void resetGameBoard() {
-        if(allPlayers.size() == 2){
+        if (allPlayers.size() == 2) {
             gameBoard.getDiscardPile().forEach(c -> gameBoard.getCourtDeck().add(c));
             gameBoard.setDiscardPile(new ArrayList<>());
         }
 
-        for (Player p:allPlayers) {
-            if(p.getCoins() > 0){
+        for (Player p : allPlayers) {
+            if (p.getCoins() > 0) {
                 gameBoard.setTreasury(p.getCoins());
                 p.setCoins(-p.getCoins());
             }
@@ -216,7 +228,7 @@ private List<String> reasons = new ArrayList<>();
     }
 
     public void resetPlayers() {
-        for (Player p:allPlayers) {
+        for (Player p : allPlayers) {
             p.setLatestWinner(false);
             p.setOut(false);
         }
@@ -226,7 +238,8 @@ private List<String> reasons = new ArrayList<>();
     public int getNextPlayer(int i) {
         while (allPlayers.get(i).isOut()) {
             i++;
-            if (i == allPlayers.size()) i = 0;           
+            if (i == allPlayers.size())
+                i = 0;
         }
         return i;
     }

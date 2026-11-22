@@ -1,4 +1,5 @@
 package se.iths.dennis.coup.io;
+
 import se.iths.dennis.coup.game.CoupCharacter;
 import se.iths.dennis.coup.game.Game;
 import se.iths.dennis.coup.game.Player;
@@ -20,17 +21,19 @@ public class GameMenu {
         this.viewer = viewer;
     }
 
-    public void doPreparations(){
+    public void doPreparations() {
         preparer.createNewPlayers();
         decideGameType();
         playGame();
     }
 
     private void decideGameType() {
-        if (game.getAllPlayers().size() == 2) prepare2PlayersGame();
+        if (game.getAllPlayers().size() == 2)
+            prepare2PlayersGame();
 
-        else preparer.prepareNormalGame();
-        
+        else
+            preparer.prepareNormalGame();
+
         viewer.viewCharacters();
     }
 
@@ -127,7 +130,8 @@ public class GameMenu {
             launchCoup(p);
         }
 
-        else showMainMenu(p);  
+        else
+            showMainMenu(p);
     }
 
     private boolean isGameOver(Player p) {
@@ -187,25 +191,37 @@ public class GameMenu {
 
             switch (choice) {
                 case 1:
-                    if(isIncomeAvailable()) {
+                    if (game.isIncomeAvailable()) {
                         game.income(p);
                         loop = false;
-                    } 
+                    } else {
+                        System.out.println("The treasury is empty so you can't do Income!");
+                        gameContinue();
+                        makeSpace();
+                    }
                     break;
 
                 case 2:
-                    if (isForeignAidAvailable()) {
+                    if (game.isForeignAidAvailable()) {
                         makeSpace();
                         attemptForeignAid(p);
                         loop = false;
+                    } else {
+                        System.out.println("The treasury has less than 2 coins so you can't do Foreign Aid!");
+                        gameContinue();
+                        makeSpace();
                     }
                     break;
 
                 case 3:
-                    if (isCoupAvailable(p)) {
+                    if (game.isCoupAvailable(p)) {
                         makeSpace();
                         launchCoup(p);
                         loop = false;
+                    } else {
+                        System.out.println("You need at least 7 coins to launch a Coup!");
+                        gameContinue();
+                        makeSpace();
                     }
                     break;
 
@@ -217,7 +233,7 @@ public class GameMenu {
                     }
                     break;
 
-                case 5:                
+                case 5:
                     if (isBluffAvailable(availableBluffs)) {
                         makeSpace();
                         useCharacter(p, getStatement(availableBluffs));
@@ -232,7 +248,8 @@ public class GameMenu {
     }
 
     private boolean isBluffAvailable(List<String> otherCharacters) {
-        if(otherCharacters.size() > 0) return true;
+        if (otherCharacters.size() > 0)
+            return true;
         System.out.println("You can't bluff this turn.");
         gameContinue();
         makeSpace();
@@ -240,8 +257,9 @@ public class GameMenu {
     }
 
     private String getStatement(List<String> statements) {
-        if(statements.size() == 1 || statements.size() == 2 && 
-        statements.get(0).equals(statements.get(1))) return statements.get(0);
+        if (statements.size() == 1 || statements.size() == 2 &&
+                statements.get(0).equals(statements.get(1)))
+            return statements.get(0);
         return selectStatement(statements);
     }
 
@@ -256,52 +274,34 @@ public class GameMenu {
             if ((choice - 1) >= statements.size()) {
                 System.out.println("Wrong, type again!");
                 gameContinue();
-            } 
-            
-            else return statements.get(choice - 1);   
+            }
+
+            else
+                return statements.get(choice - 1);
         }
     }
 
     private boolean isOwnCharacterAvailable(List<String> ownCharacters) {
-        if(ownCharacters.size() > 0) return true;
+        if (ownCharacters.size() > 0)
+            return true;
         System.out.println("You can't use an own character at the moment.");
         gameContinue();
         makeSpace();
         return false;
     }
 
-    private boolean isCoupAvailable(Player p) {
-        if(p.getCoins() >= 7) return true;
-        System.out.println("You need at least 7 coins to launch a Coup!");
-        gameContinue();
-        makeSpace();
-        return false;
-    }
-
-    private boolean isForeignAidAvailable() {
-        if(game.getGameBoard().getTreasury() >= 2) return true;
-        System.out.println("The treasury has less than 2 coins so you can't do Foreign Aid!");
-        gameContinue();
-        makeSpace();
-        return false;
-    }
-
-    private boolean isIncomeAvailable() {
-        if (game.getGameBoard().getTreasury() > 0) return true;
-        System.out.println("The treasury is empty so you can't do Income!");
-        gameContinue();
-        makeSpace();
-        return false;
-    }
-
     private void useCharacter(Player p, String statement) {
-        if(statement.equals("Duke")) claimDuke(p);
-        
-        else if(statement.equals("Assassin")) claimAssassin(p);
-        
-        else if(statement.equals("Ambassador")) claimAmbassador(p);
-        
-        else if(statement.equals("Captain")) claimCaptain(p);
+        if (statement.equals("Duke"))
+            claimDuke(p);
+
+        else if (statement.equals("Assassin"))
+            claimAssassin(p);
+
+        else if (statement.equals("Ambassador"))
+            claimAmbassador(p);
+
+        else if (statement.equals("Captain"))
+            claimCaptain(p);
     }
 
     private void claimAssassin(Player p) {
@@ -311,78 +311,87 @@ public class GameMenu {
         System.out.println("Does anyone challenge your statement? Please be honest, no cheating!");
         boolean isChallenging = answerQuestion();
 
-        if(isChallenging) challengeAssassin(p, opponent);
-        else askForContessa(p, opponent);    
+        if (isChallenging)
+            challengeAssassin(p, opponent);
+        else
+            askForContessa(p, opponent);
     }
 
     private void challengeAssassin(Player p, Player opponent) {
-        if(game.verifyStatement(p, "Assassin")) {
+        if (game.verifyStatement(p, "Assassin")) {
             System.out.println("Let's identify the opponent who challenged you:");
             Player challenger = getActiveOpponent(p);
             makeSpace();
-            
-            if(challenger.equals(opponent)) {
+
+            if (challenger.equals(opponent)) {
                 handOverComputer(p, challenger);
                 loseInfluence(challenger, 2);
             }
-   
+
             else {
                 exposeTrueStatement(p, challenger, "Assassin");
                 askForContessa(p, opponent);
             }
         }
-        
-        else exposeBluff(p);
+
+        else
+            exposeBluff(p);
     }
-                
+
     private void askForContessa(Player p, Player opponent) {
         System.out.println("Does " + opponent.getName() + " claim Contessa to block the assassinate?");
         boolean isClaimingContessa = answerQuestion();
-        if(isClaimingContessa) attemptAssassinateBlock(p, opponent);
+        if (isClaimingContessa)
+            attemptAssassinateBlock(p, opponent);
         else {
             handOverComputer(p, opponent);
             loseInfluence(opponent, 1);
         }
     }
-                        
+
     private void attemptAssassinateBlock(Player p, Player opponent) {
         System.out.println("Does anyone challenge the statement of " + opponent.getName() + "?");
         boolean isChallenging = answerQuestion();
-        if(isChallenging) challengeContessa(p, opponent);     
+        if (isChallenging)
+            challengeContessa(p, opponent);
     }
 
     private void challengeContessa(Player p, Player opponent) {
         makeSpace();
         handOverComputer(p, opponent);
-        
-        if(game.verifyStatement(opponent, "Contessa")) {
-        System.out.println("Let's identify the opponent who challenged you:");
-        Player challenger = getActiveOpponent(opponent);
-        gameContinue();
-        exposeTrueStatement(opponent, challenger, "Contessa");
+
+        if (game.verifyStatement(opponent, "Contessa")) {
+            System.out.println("Let's identify the opponent who challenged you:");
+            Player challenger = getActiveOpponent(opponent);
+            gameContinue();
+            exposeTrueStatement(opponent, challenger, "Contessa");
         }
 
-        else loseInfluence(opponent, 2);
-    } 
-        
+        else
+            loseInfluence(opponent, 2);
+    }
+
     private void claimCaptain(Player p) {
         Player opponent = getOpponentWithCoins(p);
         System.out.println("Now claim Captain and that you want to steal from " + opponent.getName());
         System.out.println("Does anyone challenge your statement? Please be honest, no cheating!");
         boolean isChallenging = answerQuestion();
 
-        if(isChallenging) challengeCaptain(p, opponent);
-        else askForStealBlock(p, opponent);   
+        if (isChallenging)
+            challengeCaptain(p, opponent);
+        else
+            askForStealBlock(p, opponent);
     }
 
     private void challengeCaptain(Player p, Player opponent) {
-        if(game.verifyStatement(p, "Captain")) {
+        if (game.verifyStatement(p, "Captain")) {
             System.out.println("Let's identify the opponent who challenged you:");
             Player challenger = getActiveOpponent(p);
             makeSpace();
-            
-            if(challenger.equals(opponent)) {
-                if(game.isStealNecessary(opponent)) game.steal(p, opponent);
+
+            if (challenger.equals(opponent)) {
+                if (game.isStealNecessary(opponent))
+                    game.steal(p, opponent);
                 exposeTrueStatement(p, opponent, "Captain");
             }
 
@@ -391,21 +400,25 @@ public class GameMenu {
                 askForStealBlock(p, opponent);
             }
         }
-   
-        else exposeBluff(p);
+
+        else
+            exposeBluff(p);
     }
 
     private void askForStealBlock(Player p, Player opponent) {
         System.out.println("Does " + opponent.getName() + " claim Ambassador/Captain to block the steal?");
         boolean isClaimingStealBlocker = answerQuestion();
-        if(isClaimingStealBlocker) attemptStealBlock(p, opponent);
-        else game.steal(p, opponent);
+        if (isClaimingStealBlocker)
+            attemptStealBlock(p, opponent);
+        else
+            game.steal(p, opponent);
     }
 
     private void attemptStealBlock(Player p, Player opponent) {
         System.out.println("Does anyone challenge the statement of " + opponent.getName() + "?");
         boolean isChallenging = answerQuestion();
-        if(isChallenging) challengeStealBlocker(p, opponent);
+        if (isChallenging)
+            challengeStealBlocker(p, opponent);
     }
 
     private void challengeStealBlocker(Player p, Player opponent) {
@@ -413,26 +426,28 @@ public class GameMenu {
         handOverComputer(p, opponent);
         System.out.println("Did you claim Ambassador or Captain?");
         String statement = selectStatement(Arrays.asList("Ambassador", "Captain"));
-        
-        if(game.verifyStatement(opponent, statement)){
-        System.out.println("Let's identify the opponent who challenged you:");
-        Player challenger = getActiveOpponent(opponent);
-        gameContinue();
-        exposeTrueStatement(opponent, challenger, statement);
+
+        if (game.verifyStatement(opponent, statement)) {
+            System.out.println("Let's identify the opponent who challenged you:");
+            Player challenger = getActiveOpponent(opponent);
+            gameContinue();
+            exposeTrueStatement(opponent, challenger, statement);
         }
 
         else {
-            if(game.isStealNecessary(opponent)) game.steal(p, opponent);
+            if (game.isStealNecessary(opponent))
+                game.steal(p, opponent);
             exposeBluff(opponent);
         }
     }
 
     private Player getOpponentWithCoins(Player p) {
         List<Player> opponentsWithCoins = game.getOpponentsWithCoins(p);
-        
-        if(opponentsWithCoins.size() == 1) return opponentsWithCoins.get(0);
-        
-        return selectOpponent(opponentsWithCoins);    
+
+        if (opponentsWithCoins.size() == 1)
+            return opponentsWithCoins.get(0);
+
+        return selectOpponent(opponentsWithCoins);
     }
 
     private void claimAmbassador(Player p) {
@@ -440,20 +455,24 @@ public class GameMenu {
         System.out.println("Does any opponent challenge your statement? Please be honest, no cheating!");
         boolean isChallenging = answerQuestion();
 
-        if(isChallenging) challengeAmbassador(p);
-        else exchange(p);    
+        if (isChallenging)
+            challengeAmbassador(p);
+        else
+            exchange(p);
     }
 
     private void challengeAmbassador(Player challengedPlayer) {
-        if(game.verifyStatement(challengedPlayer, "Ambassador")) {
+        if (game.verifyStatement(challengedPlayer, "Ambassador")) {
             System.out.println("Let's identify the opponent who challenged you:");
             Player challenger = getActiveOpponent(challengedPlayer);
             makeSpace();
-            exposeTrueStatement(challengedPlayer, challenger,  "Ambassador");
-            if(game.getRemainingPlayers().size() > 1) exchange(challengedPlayer);
+            exposeTrueStatement(challengedPlayer, challenger, "Ambassador");
+            if (game.getRemainingPlayers().size() > 1)
+                exchange(challengedPlayer);
         }
 
-        else exposeBluff(challengedPlayer);
+        else
+            exposeBluff(challengedPlayer);
     }
 
     private void exchange(Player p) {
@@ -476,50 +495,57 @@ public class GameMenu {
         System.out.println("Does any opponent challenge your statement? Please be honest, no cheating!");
         boolean isChallenging = answerQuestion();
 
-        if(isChallenging) challengeDuke(p);
-        else game.tax(p);
+        if (isChallenging)
+            challengeDuke(p);
+        else
+            game.tax(p);
     }
 
     private void challengeDuke(Player challengedPlayer) {
-        if(game.verifyStatement(challengedPlayer, "Duke")) {
+        if (game.verifyStatement(challengedPlayer, "Duke")) {
             System.out.println("Let's identify the opponent who challenged you:");
             Player challenger = getActiveOpponent(challengedPlayer);
             makeSpace();
             exposeTrueStatement(challengedPlayer, challenger, "Duke");
-            if(game.getRemainingPlayers().size() > 1) game.tax(challengedPlayer);
+            if (game.getRemainingPlayers().size() > 1)
+                game.tax(challengedPlayer);
         }
 
-        else exposeBluff(challengedPlayer);
+        else
+            exposeBluff(challengedPlayer);
     }
 
     private void attemptForeignAid(Player p) {
         System.out.println("Now tell your opponents/opponent that you want to make Foreign Aid!");
         System.out.println("Does any opponent claim Duke to block your Foreign Aid? Please be honest, no cheating!");
         boolean isClaimingDuke = answerQuestion();
-        
-        if(isClaimingDuke) attemptForeignAidBlock(p);
-        else game.foreignAid(p);     
+
+        if (isClaimingDuke)
+            attemptForeignAidBlock(p);
+        else
+            game.foreignAid(p);
     }
 
     private void attemptForeignAidBlock(Player p) {
         System.out.println("Does anyone challenge that opponent?");
         boolean isChallenging = answerQuestion();
 
-        if(isChallenging) {
+        if (isChallenging) {
             System.out.println("Let's see wich opponent claimed Duke:");
             Player challengedPlayer = getActiveOpponent(p);
             handOverComputer(p, challengedPlayer);
-            
-            if(game.verifyStatement(challengedPlayer, "Duke")){
+
+            if (game.verifyStatement(challengedPlayer, "Duke")) {
                 System.out.println("Let's identify the opponent who challenged you:");
                 Player challenger = getActiveOpponent(challengedPlayer);
                 makeSpace();
                 exposeTrueStatement(challengedPlayer, challenger, "Duke");
             }
-            
+
             else {
                 exposeBluff(challengedPlayer);
-                if(game.getRemainingPlayers().size() > 1) game.foreignAid(p);
+                if (game.getRemainingPlayers().size() > 1)
+                    game.foreignAid(p);
             }
         }
     }
@@ -532,17 +558,17 @@ public class GameMenu {
         loseInfluence(challenger, 1);
         makeSpace();
 
-        if(game.getRemainingPlayers().size() > 1) {
+        if (game.getRemainingPlayers().size() > 1) {
             handOverComputer(challenger, challengedPlayer);
             switchCharacters(challengedPlayer, statement);
         }
     }
 
     private void exposeBluff(Player challengedPlayer) {
-        System.out.println("Well since you were bluffing " + challengedPlayer.getName() + 
-        ", you will now lose influence");
+        System.out.println("Well since you were bluffing " + challengedPlayer.getName() +
+                ", you will now lose influence");
         gameContinue();
-        loseInfluence(challengedPlayer,1);
+        loseInfluence(challengedPlayer, 1);
     }
 
     private void switchCharacters(Player challengedPlayer, String statement) {
@@ -559,7 +585,7 @@ public class GameMenu {
 
     private void handOverComputer(Player p, Player receiver) {
         System.out.println("Alright " + p.getName() + ", now you will hand over the computer to "
-                        + receiver.getName());
+                + receiver.getName());
         System.out.println("Hello " + receiver.getName());
         gameContinue();
     }
@@ -589,7 +615,7 @@ public class GameMenu {
         game.coup(p);
         Player opponent = getActiveOpponent(p);
         handOverComputer(p, opponent);
-        loseInfluence(opponent,1);
+        loseInfluence(opponent, 1);
     }
 
     private void gameContinue() {
@@ -599,27 +625,30 @@ public class GameMenu {
 
     private Player getActiveOpponent(Player p) {
         List<Player> activeOpponents = game.getActiveOpponents(p);
-        
-        if (activeOpponents.size() == 1) return activeOpponents.get(0);
+
+        if (activeOpponents.size() == 1)
+            return activeOpponents.get(0);
 
         return selectOpponent(activeOpponents);
     }
 
     private void loseInfluence(Player p, int executions) {
-        if(executions == 1) {
+        if (executions == 1) {
             List<CoupCharacter> livingCharacters = game.getLivingCharacters(p);
-            
-            if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
-                livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
-            game.executeCharacter(p, livingCharacters.get(0));
-        }
-        
-        else selectSacrifice(p, livingCharacters);
-    }
 
-    else game.executeEveryCharacter(p);
-    
-    if(game.getLivingCharacters(p).isEmpty()) {
+            if (livingCharacters.size() == 1 || (livingCharacters.size() == 2 &&
+                    livingCharacters.get(0).getName().equals(livingCharacters.get(1).getName()))) {
+                game.executeCharacter(p, livingCharacters.get(0));
+            }
+
+            else
+                selectSacrifice(p, livingCharacters);
+        }
+
+        else
+            game.executeEveryCharacter(p);
+
+        if (game.getLivingCharacters(p).isEmpty()) {
             p.setOut(true);
             game.getGameBoard().setTreasury(p.getCoins());
             p.setCoins(-p.getCoins());
@@ -647,14 +676,14 @@ public class GameMenu {
             if (selectableOpponents.stream().filter(o -> o.getPlayerNumber() == choice).count() == 0) {
                 System.out.println("Wrong, type again!");
                 gameContinue();
-            } 
-            
+            }
+
             else {
                 return selectableOpponents
-                .stream()
-                .filter(o -> o.getPlayerNumber() == choice)
-                .collect(Collectors.toList())
-                .get(0); 
+                        .stream()
+                        .filter(o -> o.getPlayerNumber() == choice)
+                        .collect(Collectors.toList())
+                        .get(0);
             }
         }
     }
