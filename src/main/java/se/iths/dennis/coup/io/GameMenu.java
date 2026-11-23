@@ -67,9 +67,9 @@ public class GameMenu {
     }
 
     private void prepare2PlayersGame() {
-        game.getAllPlayers().get(0).setCoins(1);
-        game.getAllPlayers().get(1).setCoins(2);
-        game.getGameBoard().setTreasury(-3);
+        game.getAllPlayers().get(0).addCoins(1);
+        game.getAllPlayers().get(1).addCoins(2);
+        game.getGameBoard().removeCoins(3);
         preparer.dealCharacters(5);
 
         for (Player p : game.getAllPlayers()) {
@@ -650,8 +650,8 @@ public class GameMenu {
 
         if (game.getLivingCharacters(p).isEmpty()) {
             p.setOut(true);
-            game.getGameBoard().setTreasury(p.getCoins());
-            p.setCoins(-p.getCoins());
+            game.getGameBoard().addCoins(p.getCoins());
+            p.removeCoins(p.getCoins());
             System.out.println("You have lost both your characters " + p.getName()
                     + " and are now out of the game!");
             gameContinue();

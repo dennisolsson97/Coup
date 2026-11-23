@@ -39,8 +39,8 @@ public class Preparer {
 
     public void prepareNormalGame() {
         for (Player p : game.getAllPlayers()) {
-            p.setCoins(2);
-            game.getGameBoard().setTreasury(-2);
+            p.addCoins(2);
+            game.getGameBoard().removeCoins(2);
         }
 
         dealCharacters(2);

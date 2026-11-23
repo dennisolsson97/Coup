@@ -12,8 +12,12 @@ public class GameBoard {
         return treasury;
     }
 
-    public void setTreasury(Integer transaction) {
-        this.treasury += transaction;
+    public void addCoins(int transaction) {
+        treasury += transaction;
+    }
+
+    public void removeCoins(int transaction) {
+        treasury -= transaction;
     }
 
     public List<CoupCharacter> getCourtDeck() {

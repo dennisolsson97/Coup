@@ -55,8 +55,8 @@ public class Game {
     }
 
     public void income(Player p) {
-        p.setCoins(1);
-        gameBoard.setTreasury(-1);
+        p.addCoins(1);
+        gameBoard.removeCoins(1);
     }
 
     public boolean isForeignAidAvailable() {
@@ -64,8 +64,8 @@ public class Game {
     }
 
     public void foreignAid(Player p) {
-        p.setCoins(2);
-        gameBoard.setTreasury(-2);
+        p.addCoins(2);
+        gameBoard.removeCoins(2);
     }
 
     public boolean isCoupMandatory(Player p) {
@@ -77,18 +77,18 @@ public class Game {
     }
 
     public void coup(Player p) {
-        p.setCoins(-7);
-        gameBoard.setTreasury(7);
+        p.removeCoins(7);
+        gameBoard.addCoins(7);
     }
 
     public void tax(Player p) {
-        p.setCoins(3);
-        gameBoard.setTreasury(-3);
+        p.addCoins(3);
+        gameBoard.removeCoins(3);
     }
 
     public void assassinate(Player p) {
-        p.setCoins(-3);
-        gameBoard.setTreasury(3);
+        p.removeCoins(3);
+        gameBoard.addCoins(3);
     }
 
     public List<CoupCharacter> getRandomCharacters(Integer numberOfRandomCharacters) {
@@ -178,13 +178,13 @@ public class Game {
 
     public void steal(Player stealer, Player victim) {
         if (victim.getCoins() == 1) {
-            stealer.setCoins(1);
-            victim.setCoins(-1);
+            stealer.addCoins(1);
+            victim.removeCoins(1);
         }
 
         else {
-            stealer.setCoins(2);
-            victim.setCoins(-2);
+            stealer.addCoins(2);
+            victim.removeCoins(2);
         }
     }
 
@@ -221,8 +221,8 @@ public class Game {
 
         for (Player p : allPlayers) {
             if (p.getCoins() > 0) {
-                gameBoard.setTreasury(p.getCoins());
-                p.setCoins(-p.getCoins());
+                gameBoard.addCoins(p.getCoins());
+                p.removeCoins(p.getCoins());
             }
 
             p.getCharacters().stream().filter(c -> c.isDead()).forEach(c -> c.setDead(false));

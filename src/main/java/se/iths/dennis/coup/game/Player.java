@@ -9,7 +9,7 @@ public class Player {
 
     private Integer playerNumber = 0;
     private String name;
-    private Integer coins = 0;
+    private int coins;
     private List<CoupCharacter> characters = new ArrayList<>();
     private boolean isOut;
     private boolean isLatestWinner;
@@ -30,12 +30,16 @@ public class Player {
         this.playerNumber = playerNumber;
     }
 
-    public Integer getCoins() {
+    public int getCoins() {
         return coins;
     }
 
-    public void setCoins(Integer transaction) {
-        this.coins += transaction;
+    public void addCoins(int transaction) {
+        coins += transaction;
+    }
+
+    public void removeCoins(int transaction) {
+        coins -= transaction;
     }
 
     public List<CoupCharacter> getCharacters() {
