@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
-    private Integer treasury = 50;
+    private int treasury = 50;
     private List<CoupCharacter> courtDeck = new ArrayList<>();
     private List<CoupCharacter> discardPile = new ArrayList<>();
 
-    public Integer getTreasury() {
+    public int getTreasury() {
         return treasury;
     }
 

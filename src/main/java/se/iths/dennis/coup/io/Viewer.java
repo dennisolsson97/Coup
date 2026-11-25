@@ -1,7 +1,6 @@
 package se.iths.dennis.coup.io;
 import java.util.List;
 import java.util.Scanner;
-
 import se.iths.dennis.coup.game.CoupCharacter;
 import se.iths.dennis.coup.game.Game;
 import se.iths.dennis.coup.game.Player;

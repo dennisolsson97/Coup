@@ -6,19 +6,19 @@ import se.iths.dennis.coup.game.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class GameMenu {
     Game game;
     Preparer preparer;
     Viewer viewer;
-    Scanner sc = new Scanner(System.in);
+    InputReader inputReader;
 
-    public GameMenu(Game game, Preparer preparer, Viewer viewer) {
+    public GameMenu(Game game, Preparer preparer, Viewer viewer, InputReader inputReader) {
         this.game = game;
         this.preparer = preparer;
         this.viewer = viewer;
+        this.inputReader = inputReader;
     }
 
     public void doPreparations() {
@@ -45,8 +45,7 @@ public class GameMenu {
             characters.forEach(System.out::println);
 
             System.out.print("choice:");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = inputReader.readNextInt();
 
             if (characters.stream().filter(c -> c.getCharacterNumber() == choice).count() == 1) {
                 CoupCharacter selectedCharacter = characters
@@ -75,7 +74,7 @@ public class GameMenu {
         for (Player p : game.getAllPlayers()) {
             System.out.println(p.getName() + " it's your turn to choose one of five characters. " +
                     "Make sure that your opponent doesn't look at the screen and then press Enter!");
-            sc.nextLine();
+            inputReader.readNextLine();
 
             List<CoupCharacter> selectedCharacters = selectCharacters(1, p.getCharacters());
             p.getCharacters().add(selectedCharacters.get(0));
@@ -91,7 +90,7 @@ public class GameMenu {
             p.getCharacters().add(randomCharacters.get(0));
             System.out.println("Finally you got this random character: " + randomCharacters.get(0).getName());
             System.out.println("press Enter!");
-            sc.nextLine();
+            inputReader.readNextLine();
             makeSpace();
         }
     }
@@ -120,7 +119,7 @@ public class GameMenu {
     private void startTurn(Player p) {
         System.out.println("It's the turn of " + p.getName() + ", make sure the right person has the " +
                 "computer and then press Enter!");
-        sc.nextLine();
+        inputReader.readNextLine();
         makeSpace();
 
         if (game.isCoupMandatory(p)) {
@@ -186,8 +185,7 @@ public class GameMenu {
             viewer.viewInformation(p, availableCharacters, availableBluffs);
             System.out.println("It's your turn " + p.getName() + ", choose one of the above options!");
             System.out.print("choice:");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = inputReader.readNextInt();
 
             switch (choice) {
                 case 1:
@@ -268,8 +266,7 @@ public class GameMenu {
             viewer.viewStatements(statements);
             System.out.println("Choose statement by typing number in front of it!");
             System.out.print("choice:");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = inputReader.readNextInt();
 
             if ((choice - 1) >= statements.size()) {
                 System.out.println("Wrong, type again!");
@@ -595,8 +592,7 @@ public class GameMenu {
             System.out.println("1.Yes");
             System.out.println("2.No");
             System.out.print("answer:");
-            int answer = sc.nextInt();
-            sc.nextLine();
+            int answer = inputReader.readNextInt();
 
             switch (answer) {
                 case 1:
@@ -620,7 +616,7 @@ public class GameMenu {
 
     private void gameContinue() {
         System.out.println("Press Enter!");
-        sc.nextLine();
+        inputReader.readNextLine();
     }
 
     private Player getActiveOpponent(Player p) {
@@ -670,8 +666,7 @@ public class GameMenu {
             viewer.viewOpponents(selectableOpponents);
             System.out.println("Choose one opponent by typing his/her player-number:");
             System.out.print("choice:");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = inputReader.readNextInt();
 
             if (selectableOpponents.stream().filter(o -> o.getPlayerNumber() == choice).count() == 0) {
                 System.out.println("Wrong, type again!");

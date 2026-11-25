@@ -2,6 +2,7 @@ package se.iths.dennis.coup;
 
 import se.iths.dennis.coup.game.Game;
 import se.iths.dennis.coup.io.GameMenu;
+import se.iths.dennis.coup.io.InputReader;
 import se.iths.dennis.coup.io.Preparer;
 import se.iths.dennis.coup.io.Viewer;
 
@@ -14,7 +15,8 @@ public class CoupApplication {
         game.createGameBoard();
         Preparer preparer = new Preparer(game);
         Viewer viewer = new Viewer(game);
-        GameMenu gameMenu = new GameMenu(game, preparer, viewer);
+        InputReader inputReader = new InputReader();
+        GameMenu gameMenu = new GameMenu(game, preparer, viewer, inputReader);
         System.out.println("Welcome to a new round of Coup! How many will play? You can be 2-6 players");
         gameMenu.doPreparations();
     }
